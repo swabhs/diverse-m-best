@@ -1,0 +1,16 @@
+package diverse;
+
+message edge {
+  required string id = 1;
+  required double weight = 2;
+  repeated node nodes = 3;
+}
+
+message node {
+  required string id = 1;
+} 
+
+message hypergraph {
+  repeated node nodes = 1;
+  repeated edge edges = 2;
+}
