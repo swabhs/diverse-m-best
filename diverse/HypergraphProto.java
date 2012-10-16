@@ -14,6 +14,10 @@ public final class HypergraphProto {
     // required int32 id = 1;
     boolean hasId();
     int getId();
+    
+    // required string name = 2;
+    boolean hasName();
+    String getName();
   }
   public static final class Vertex extends
       com.google.protobuf.GeneratedMessage
@@ -54,8 +58,41 @@ public final class HypergraphProto {
       return id_;
     }
     
+    // required string name = 2;
+    public static final int NAME_FIELD_NUMBER = 2;
+    private java.lang.Object name_;
+    public boolean hasName() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    public String getName() {
+      java.lang.Object ref = name_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+          name_ = s;
+        }
+        return s;
+      }
+    }
+    private com.google.protobuf.ByteString getNameBytes() {
+      java.lang.Object ref = name_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+        name_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    
     private void initFields() {
       id_ = 0;
+      name_ = "";
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -63,6 +100,10 @@ public final class HypergraphProto {
       if (isInitialized != -1) return isInitialized == 1;
       
       if (!hasId()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasName()) {
         memoizedIsInitialized = 0;
         return false;
       }
@@ -76,6 +117,9 @@ public final class HypergraphProto {
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         output.writeInt32(1, id_);
       }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeBytes(2, getNameBytes());
+      }
       getUnknownFields().writeTo(output);
     }
     
@@ -88,6 +132,10 @@ public final class HypergraphProto {
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(1, id_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(2, getNameBytes());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -215,6 +263,8 @@ public final class HypergraphProto {
         super.clear();
         id_ = 0;
         bitField0_ = (bitField0_ & ~0x00000001);
+        name_ = "";
+        bitField0_ = (bitField0_ & ~0x00000002);
         return this;
       }
       
@@ -257,6 +307,10 @@ public final class HypergraphProto {
           to_bitField0_ |= 0x00000001;
         }
         result.id_ = id_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.name_ = name_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -276,12 +330,19 @@ public final class HypergraphProto {
         if (other.hasId()) {
           setId(other.getId());
         }
+        if (other.hasName()) {
+          setName(other.getName());
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
       
       public final boolean isInitialized() {
         if (!hasId()) {
+          
+          return false;
+        }
+        if (!hasName()) {
           
           return false;
         }
@@ -316,6 +377,11 @@ public final class HypergraphProto {
               id_ = input.readInt32();
               break;
             }
+            case 18: {
+              bitField0_ |= 0x00000002;
+              name_ = input.readBytes();
+              break;
+            }
           }
         }
       }
@@ -341,6 +407,42 @@ public final class HypergraphProto {
         id_ = 0;
         onChanged();
         return this;
+      }
+      
+      // required string name = 2;
+      private java.lang.Object name_ = "";
+      public boolean hasName() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      public String getName() {
+        java.lang.Object ref = name_;
+        if (!(ref instanceof String)) {
+          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+          name_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
+      }
+      public Builder setName(String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        name_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearName() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        name_ = getDefaultInstance().getName();
+        onChanged();
+        return this;
+      }
+      void setName(com.google.protobuf.ByteString value) {
+        bitField0_ |= 0x00000002;
+        name_ = value;
+        onChanged();
       }
       
       // @@protoc_insertion_point(builder_scope:shortestPath.Vertex)
@@ -1802,13 +1904,13 @@ public final class HypergraphProto {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\020hypergraph.proto\022\014shortestPath\"\024\n\006Vert" +
-      "ex\022\n\n\002id\030\001 \002(\005\"N\n\tHyperedge\022\n\n\002id\030\001 \002(\005\022" +
-      "\016\n\006weight\030\002 \002(\001\022\023\n\013childrenIds\030\003 \003(\005\022\020\n\010" +
-      "parentId\030\004 \001(\005\"\\\n\nHypergraph\022&\n\010vertices" +
-      "\030\001 \003(\0132\024.shortestPath.Vertex\022&\n\005edges\030\002 " +
-      "\003(\0132\027.shortestPath.HyperedgeB\021B\017Hypergra" +
-      "phProto"
+      "\n\020hypergraph.proto\022\014shortestPath\"\"\n\006Vert" +
+      "ex\022\n\n\002id\030\001 \002(\005\022\014\n\004name\030\002 \002(\t\"N\n\tHyperedg" +
+      "e\022\n\n\002id\030\001 \002(\005\022\016\n\006weight\030\002 \002(\001\022\023\n\013childre" +
+      "nIds\030\003 \003(\005\022\020\n\010parentId\030\004 \001(\005\"\\\n\nHypergra" +
+      "ph\022&\n\010vertices\030\001 \003(\0132\024.shortestPath.Vert" +
+      "ex\022&\n\005edges\030\002 \003(\0132\027.shortestPath.Hypered" +
+      "geB\021B\017HypergraphProto"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -1820,7 +1922,7 @@ public final class HypergraphProto {
           internal_static_shortestPath_Vertex_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_shortestPath_Vertex_descriptor,
-              new java.lang.String[] { "Id", },
+              new java.lang.String[] { "Id", "Name", },
               shortestPath.HypergraphProto.Vertex.class,
               shortestPath.HypergraphProto.Vertex.Builder.class);
           internal_static_shortestPath_Hyperedge_descriptor =

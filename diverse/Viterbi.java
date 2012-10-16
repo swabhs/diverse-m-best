@@ -10,7 +10,7 @@ import shortestPath.HypergraphProto.Hypergraph;
 import shortestPath.HypergraphProto.Vertex;
 
 /**
- * Viterbi style algorithm to find the shortest path in a hypergraph.
+ * Viterbi style algorithm to find the path with maximum weight in a hypergraph.
  * The hypergraph is defined in hypergraph.proto
  * 
  * @author swabha
@@ -19,9 +19,9 @@ class Viterbi {
 	
 	private Hypergraph h;
 	
-	/** Dynamic programming state saving variable */
+	/** Dynamic programming state saving variables */
 	private Map<Integer, Double> pi = new HashMap<Integer, Double>();
-	private Map<Integer, List<Integer>> backPointers = new HashMap<Integer, List<Integer>>();
+	private Map<Integer, List<Hyperedge>> backPointers = new HashMap<Integer, List<Hyperedge>>();
 
 	Viterbi(Hypergraph h){
 		this.h = h;
@@ -72,32 +72,41 @@ class Viterbi {
 	
 	/**
 	 * Run CKY and get a list of vertex ids which result in the highest probability structure
-	 * @param 
 	 */
-	List<Integer> run() {
+	List<Hyperedge> run() {
 		Map<Integer, List<Hyperedge>> inMap = generateIncomingMap();
 		List<Integer> vertices = toposort(getTerminals(h), h);
 		initialize();
 		for (Integer v: vertices) {
 			for (Hyperedge e : inMap.get(v)) {
 				double childProduct = 1.0;
+				List<Hyperedge> bestEdges;
 				for (Integer i : e.getChildrenIdsList()) {
 					childProduct *= pi.get(i);
 				}
 				
 				if (pi.get(v) < childProduct * e.getWeight()) {
 					pi.put(v, childProduct * e.getWeight());
-					backPointers.put(v, e.getChildrenIdsList());
+					if (backPointers.containsKey(v)) {
+						bestEdges = backPointers.get(v);
+					} else {
+						bestEdges = new ArrayList<Hyperedge>();
+					}
+					bestEdges.add(e);
+					backPointers.put(v, bestEdges);
 				}
 			}
 		}
 		return backPointers.get(vertices.get(vertices.size() - 1));
 	}
 	
+	void renderResult(List<Hyperedge> edges) {
+		
+	}
+	
 	/**
 	 * Topologically sorts all vertices given a list of terminal vertices
-	 * @param vertices
-	 * @return
+	 * Runs in O(|V|+|E|).
 	 */
 	List<Integer> toposort(List<Integer> terminals, Hypergraph h) {
 		List<Integer> sorted = new ArrayList<Integer>();
@@ -113,7 +122,7 @@ class Viterbi {
 		return sorted;
 	}
 	
-	/** Hypergraph topological sort recursion */
+	/** Hypergraph topological sort recursion. Runs in O(|V|+|E|). */
 	void visit(
 			Integer vertexId,
 			List<Integer> sorted,
@@ -138,6 +147,10 @@ class Viterbi {
 		}
 	}
 	
+	/**
+	 * Runs in O(|V|+|E|).
+	 * @return
+	 */
 	Map<Integer, List<Hyperedge>> generateOutgoingMap() {
 		Map<Integer, List<Hyperedge>> outMap = new HashMap<Integer, List<Hyperedge>>();
 		for(Hyperedge e: h.getEdgesList()) {
