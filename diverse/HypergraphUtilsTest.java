@@ -1,7 +1,7 @@
 package shortestPath;
 
-import static org.junit.Assert.*;
-
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -21,24 +21,60 @@ public class HypergraphUtilsTest extends BaseTest {
 	
 	@Test
 	public void testGetTerminals() {
-		System.out.println(HypergraphUtils.getTerminals(h));
+		// Elements need to be in order
+		List<Integer> expected = Arrays.asList(1, 2, 3);
+		List<Integer> actual = HypergraphUtils.getTerminals(h);
+		assertTrue(actual.equals(expected));
+	}
+	
+	@Test
+	public void testGenerateIncomingMap() {
+		Map<Integer, List<Hyperedge>> actualMap = HypergraphUtils.generateIncomingMap(h);
+		List<Integer> actual = new ArrayList<Integer>();
+		for (Hyperedge e :actualMap.get(8)) {
+			actual.add(e.getId());
+		}
+		List<Integer> expected = Arrays.asList(6, 7);
+		assertTrue(actual.equals(expected));
 	}
 
 	@Test
-	public void testGenerateIncomingMap() {
-		Map<Integer, List<Hyperedge>> incomingMap = HypergraphUtils.generateIncomingMap(h);
-		List<Hyperedge> edges = incomingMap.get(5);
-		for (Hyperedge e :edges) {
-			System.out.println(e.getId());
+	public void testGenerateIncomingMap_SourceVertices() {
+		Map<Integer, List<Hyperedge>> actualMap = HypergraphUtils.generateIncomingMap(h);
+		List<Integer> actual = new ArrayList<Integer>();
+		for (Hyperedge e :actualMap.get(3)) {
+			actual.add(e.getId());
 		}
+		List<Integer> expected = new ArrayList<Integer>();
+		assertTrue(actual.equals(expected));
 	}
 	
 	@Test
 	public void testGenerateOutgoingMap() {
-		Map<Integer, List<Hyperedge>> outgoingMap = HypergraphUtils.generateOutgoingMap(h);
-		List<Hyperedge> edges = outgoingMap.get(9);
-		for (Hyperedge e :edges) {
-			System.out.println(e.getId());
+		Map<Integer, List<Hyperedge>> actualMap = HypergraphUtils.generateOutgoingMap(h);
+		List<Integer> actual = new ArrayList<Integer>();
+		for (Hyperedge e :actualMap.get(7)) {
+			actual.add(e.getId());
 		}
+		List<Integer> expected = Arrays.asList(7, 8);
+		assertTrue(actual.equals(expected));
+	}
+	
+	@Test
+	public void testGenerateOutgoingMap_TargetVertex() {
+		Map<Integer, List<Hyperedge>> outgoingMap = HypergraphUtils.generateOutgoingMap(h);
+		List<Integer> actual = new ArrayList<Integer>();
+		for (Hyperedge e :outgoingMap.get(9)) {
+			actual.add(e.getId());
+		}
+		List<Integer> expected = new ArrayList<Integer>();
+		assertTrue(actual.equals(expected));
+	}
+	
+	@Test
+	public void testToposort() {
+		List<Integer> actual = HypergraphUtils.toposort(h);
+		List<Integer> expected = Arrays.asList(1, 6, 2, 5, 7, 3, 4, 8, 9);
+		assertTrue(actual.equals(expected));
 	}
 }

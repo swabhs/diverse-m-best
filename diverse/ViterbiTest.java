@@ -1,6 +1,10 @@
 package shortestPath;
 
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.Test;
 
 import shortestPath.HypergraphProto.Hypergraph;
@@ -19,11 +23,24 @@ public class ViterbiTest extends BaseTest {
 	@Test
 	public void testInitialize() {
 		v.initialize();
+		List<Double> actual = new ArrayList<Double>();
 		for (int i = 0; i < v.pi.size(); i++)
-		System.out.println(i + " : " + v.pi.get(i));
+			actual.add(v.pi.get(i));
+		List<Double> expected = Arrays.asList(1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+		assertTrue(actual.equals(expected));
 	}
 
+	@Test
 	public void testRun() {
-		v.renderResult(v.run());
+		
 	}
+	
+	@Test
+	public void testRenderResult() {	
+		String expected = "S NP VP D N V";
+		String actual = (v.renderResult(v.run()));
+		assertEquals(expected, actual);
+	}
+	
+	
 }

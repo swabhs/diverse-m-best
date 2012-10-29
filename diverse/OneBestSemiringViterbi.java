@@ -1,6 +1,7 @@
 package shortestPath;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -10,38 +11,32 @@ import shortestPath.HypergraphProto.Hyperedge;
 import shortestPath.HypergraphProto.Hypergraph;
 import shortestPath.HypergraphProto.Vertex;
 
-/**
- * Viterbi style algorithm to find the path with maximum weight in a hypergraph.
- * The hypergraph is defined in hypergraph.proto
- * 
- * @author swabha
- */
-class Viterbi {
-	
-	private Hypergraph h;
+public class OneBestSemiringViterbi {
+
+private Hypergraph h;
 	
 	/** Dynamic programming state saving variables */
-	List<Double> pi;
+		
 	List<Hyperedge> backPointers;
+	OneBestSemiring vs;
 	
-	Viterbi(Hypergraph h){
+	OneBestSemiringViterbi(Hypergraph h) {
 		this.h = h;
-		pi = new ArrayList<Double>(h.getVerticesCount());
 		backPointers = new ArrayList<Hyperedge>(h.getVerticesCount());
-		for (int i = 0; i < h.getVerticesCount(); ++i) {
-			backPointers.add(null);
-		}
+		vs = new OneBestSemiring();
 	}
 	
 	/** Initializes the weight of terminal nodes to 1.0 and the rest of the nodes to 0.0 */
 	List<Double> initialize() {
 		List<Integer> terminalIds = HypergraphUtils.getTerminals(h);
+		List<Double> pi = new ArrayList<Double>();
 		for (Vertex v : h.getVerticesList()) {
 			pi.add(v.getId() - 1, 0.0);
 		}
 		for(Integer id: terminalIds) {
 			pi.set(id - 1, 1.0);
-		}		
+		}
+		vs.setElements(pi);
 		return pi;
 	}
 	
@@ -52,17 +47,22 @@ class Viterbi {
 		Map<Integer, List<Hyperedge>> inMap = HypergraphUtils.generateIncomingMap(h);
 		List<Integer> vertices = HypergraphUtils.toposort(h);
 		initialize();
-		for (Integer v: vertices) {			
+		for (Integer v: vertices) {
+			List<Double> elements = vs.getElements();
 			for (Hyperedge e : inMap.get(v)) {
-				double childProduct = 1.0;
 				
+				List<Double> toBeMultiplied = new ArrayList<Double>();
+				toBeMultiplied.add(e.getWeight());
 				for (Integer i : e.getChildrenIdsList()) {
-					childProduct *= pi.get(i-1);
+					
+					toBeMultiplied.add(elements.get(i-1));
 				}
-				if (pi.get(v-1) < childProduct * e.getWeight()) {
-					pi.set(v-1, childProduct * e.getWeight());
-					backPointers.set(v-1, e);
-				}
+				
+				double product = vs.multiply(toBeMultiplied);
+				List<Double> toBeAdded = Arrays.asList(elements.get(v-1), product);
+				elements.set(v-1, vs.add(toBeAdded));
+				if (vs.argmax(toBeAdded) != toBeAdded.size() - 1)
+					backPointers.add(v-1, e);
 			}
 		}
 		return backPointers;
@@ -83,5 +83,4 @@ class Viterbi {
 		}
 		return builder.toString();
 	}
-	
 }
