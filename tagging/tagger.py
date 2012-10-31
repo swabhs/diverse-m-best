@@ -1,4 +1,5 @@
 import sys
+import diverse.hypergraph_pb2 as hypergraph
 from math import *
 
 class Distribution:
@@ -55,7 +56,7 @@ def replace_rare_words(distribution, sentence):
       new_sent.append(pair)
   return new_sent
 
-def viterbi(distribution, sentence):
+def viterbi(distribution, sentence, hyper):
   "Run the viterbi algorithm over the sentence, assuming a HMM distribution." 
   # Define the variables to be the same as in the class slides.
   n = len(sentence)
@@ -72,7 +73,15 @@ def viterbi(distribution, sentence):
       [((0, u, v), 0) for u in K for v in K if (u, v) != ("*", "*")]
   pi = dict(pi)
   bp = {}
-
+  node_count = 0
+  edge_count = 0
+  hchart = {}
+  vertex = hyper.vertices.add()
+  vertex.id = node_count
+  vertex.name = ""
+  hchart[(0, "*", "*")] = vertex
+  node_count += 1
+  
   # Run the main loop. 
   for k in range(1, n + 1):
     for u in K:
@@ -80,9 +89,39 @@ def viterbi(distribution, sentence):
         ls = [(w, pi[k - 1, w, u] * q(v, w, u) * e(x[k], v)) for w in K]
         bp[k, u, v], pi[k, u, v]  = \
             argmax([(w, pi[k - 1, w, u] * q(v, w, u) * e(x[k], v)) for w in K])  
+        node = hyper.vertices.add()
+        node.id = node_count
+        node.name = "Position :" + str(k) + " tag: " + v 
+        node_count += 1
+        hchart[k, u, v] = node
+        for w in K:
+          if (k - 1, w, u) not in hchart: continue
+          if q(v, w, u) * e(x[k], v) == 0: continue
+          edge = hyper.edges.add()
+          edge.id = edge_count
+          edge_count += 1
+          edge.parentId = hchart[k, u, v].id
+          edge.childrenIds.append(hchart[k - 1, w, u].id)
+          edge.weight = log(q(v, w, u) * e(x[k], v))
+
   # Follow the back pointers in the chart.
   (y[n - 1], y[n]), score  = argmax([((u,v), pi[n, u, v] * q("STOP", u, v)) 
+
                                  for u in K for v in K]) 
+
+  root = hyper.vertices.add()
+  root.name = "root"
+  root.id = node_count
+  node_count += 1
+  for u in K:
+    for v in K:
+      if q("STOP", u, v) == 0: continue
+      edge = hyper.edges.add()
+      edge.parentId = root.id
+      edge.id = edge_count
+      edge.childrenIds.append(hchart[n, u, v].id)
+      edge.weight = log(q("STOP", u, v))
+      edge_count += 1
   for k in range(n - 2, 0, -1):
     y[k] = bp[k + 2, y[k + 1], y[k + 2]]
   y[0] = "*"
@@ -97,8 +136,14 @@ def main(mode, count_file, sentence_file):
       sentence.append(l.strip())
     else:
       if mode == "TAG":
-        tagging, scores = viterbi(distribution, sentence)
-        print "\n".join([w + " " + t + " " + str(log(s)) for w, t, s in zip(sentence, tagging, scores)])
+        hyper = hypergraph.Hypergraph()
+        tagging, scores = viterbi(distribution, sentence, hyper)
+        #print "\n".join([w + " " + t + " " + str(log(s)) for w, t, s in zip(sentence, tagging, scores)])
+        print hyper
+        f = open("test.hyper", "wb")
+        f.write(hyper.SerializeToString())
+        f.close()
+        exit()
       elif mode == "REPLACE":
         new_sent = replace_rare_words(distribution, sentence)
         print "\n".join(new_sent)
