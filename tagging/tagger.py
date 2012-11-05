@@ -73,8 +73,8 @@ def viterbi(distribution, sentence, hyper):
       [((0, u, v), 0) for u in K for v in K if (u, v) != ("*", "*")]
   pi = dict(pi)
   bp = {}
-  node_count = 0
-  edge_count = 0
+  node_count = 1
+  edge_count = 1
   hchart = {}
   vertex = hyper.vertices.add()
   vertex.id = node_count
@@ -139,7 +139,7 @@ def main(mode, count_file, sentence_file):
         hyper = hypergraph.Hypergraph()
         tagging, scores = viterbi(distribution, sentence, hyper)
         #print "\n".join([w + " " + t + " " + str(log(s)) for w, t, s in zip(sentence, tagging, scores)])
-        print hyper
+        #print hyper
         f = open("test.hyper", "wb")
         f.write(hyper.SerializeToString())
         f.close()
