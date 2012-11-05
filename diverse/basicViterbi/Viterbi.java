@@ -80,11 +80,11 @@ class Viterbi {
 		}
 		Collections.reverse(edges);
 		for (Hyperedge e : edges) {
-			if (e != null)
-				builder.append(names.get(e.getParentId()));
+        if (e != null) {
+            builder.append(names.get(e.getParentId()));
+        }
 				builder.append(" ");
 		}
 		return builder.toString();
-	}
-	
+	}	
 }
