@@ -2,7 +2,7 @@ package semiring;
 
 import java.util.List;
 
-interface Semiring<T> {
+public interface Semiring<T> {
 
 	T add(List<T> elements);
 	
