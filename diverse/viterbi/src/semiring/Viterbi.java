@@ -12,11 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
-
-
-
-public class OneBestSemiringViterbi {
+public class Viterbi {
 
 private Hypergraph h;
 	
@@ -25,7 +21,7 @@ private Hypergraph h;
 	List<Hyperedge> backPointers;
 	OneBestSemiring vs;
 	
-	OneBestSemiringViterbi(Hypergraph h) {
+	Viterbi(Hypergraph h) {
 		this.h = h;
 		backPointers = new ArrayList<Hyperedge>(h.getVerticesCount());
 		vs = new OneBestSemiring();

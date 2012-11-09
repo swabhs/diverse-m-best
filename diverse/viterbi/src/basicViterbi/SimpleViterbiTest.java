@@ -1,7 +1,8 @@
 package basicViterbi;
 
-
+import hypergraph.HypergraphProto.Hyperedge;
 import hypergraph.HypergraphProto.Hypergraph;
+import hypergraph.HypergraphUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,17 +10,15 @@ import java.util.List;
 
 import org.junit.Test;
 
-
-
-public class ViterbiTest extends BaseTest {
+public class SimpleViterbiTest extends BaseTest {
 
 	private Hypergraph h;
-	private Viterbi v;
+	private SimpleViterbi v;
 
-	public ViterbiTest(){ 
+	public SimpleViterbiTest(){ 
 		super();
 		h = createHypergraph();
-		v = new Viterbi(h);
+		v = new SimpleViterbi(h);
 	}
 	
 	@Test
@@ -34,15 +33,14 @@ public class ViterbiTest extends BaseTest {
 
 	@Test
 	public void testRun() {
-		
+		List<Integer> expected = Arrays.asList(0, 1, 3, 2, 5, 7);
+		List<Hyperedge> results = v.run();
+		List<Integer> actual = new ArrayList<Integer>();
+		for (Hyperedge result : results) {
+			actual.add(result.getId()); 
+		}
+		assertTrue(actual.equals(expected));
+		System.out.println(HypergraphUtils.renderResult(results, h));
 	}
-	
-	@Test
-	public void testRenderResult() {	
-		String expected = "S VP NP V N D    ";
-		String actual = (v.renderResult(v.run()));
-		assertEquals(expected, actual);
-	}
-	
-	
+
 }

@@ -4,10 +4,10 @@
  */
 package basicViterbi;
 
-public class ViterbiMain {
+public class SimpleViterbiMain {
 
 	public static void main(String[] args) {
-		Viterbi v = new Viterbi(null);
+		SimpleViterbi v = new SimpleViterbi(null);
 		v.run();
 	}
 	

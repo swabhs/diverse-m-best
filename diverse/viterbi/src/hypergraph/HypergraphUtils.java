@@ -5,6 +5,7 @@ import hypergraph.HypergraphProto.Hypergraph;
 import hypergraph.HypergraphProto.Vertex;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -104,6 +105,39 @@ public class HypergraphUtils {
 					visit(e.getParentId(), sorted, visited, outMap);
 				}
 			}
+		}
+	}
+	
+	/** Displays the 1-best parse */
+	public static String renderResult(List<Hyperedge> edges, Hypergraph h) {
+		StringBuilder builder = new StringBuilder();
+		Map<Integer, String> names = new HashMap<Integer, String>();
+		for (Vertex v : h.getVerticesList()) {
+			names.put(v.getId(), v.getName());
+		}
+		Collections.reverse(edges);
+		for (Hyperedge e : edges) {
+			if (e != null)
+				builder.append(names.get(e.getParentId()));
+				builder.append(" ");
+		}
+		return builder.toString();
+	}
+	
+	public static void renderHypergraph(Hypergraph h) {
+		Map<Integer, String> names = new HashMap<Integer, String>();
+		for (Vertex v : h.getVerticesList()) {
+			names.put(v.getId(), v.getName());
+		}
+		
+		for (Hyperedge edges : h.getEdgesList()) {
+			System.out.print("Edge: " + edges.getId() + "\t");
+			System.out.print("Parent: " + names.get(edges.getParentId()) + "\t");
+			System.out.print("Children: " );
+			for (Integer v : edges.getChildrenIdsList()) {
+				System.out.print(names.get(v) + " ");
+			}
+			System.out.println();
 		}
 	}
 }
