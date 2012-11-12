@@ -124,6 +124,7 @@ public class HypergraphUtils {
 		return builder.toString();
 	}
 	
+	/** Displays the hypergraph, listing each hyperedge in a line */
 	public static void renderHypergraph(Hypergraph h) {
 		Map<Integer, String> names = new HashMap<Integer, String>();
 		for (Vertex v : h.getVerticesList()) {

@@ -2,47 +2,23 @@ package semiring;
 
 import java.util.List;
 
+public class OneBestSemiring implements Semiring<Derivation> {
 
-class OneBestSemiring implements Semiring<Double> {
-	
-	List<Double> elements;
-		
-	List<Double> getElements() {
-		return elements;
-	}
-
-	void setElements(List<Double> elements) {
-		this.elements = elements;
-	}
-
-	int argmax(List<Double> elements) {
-		int argmax = 0;
-		for (int i = 1; i < elements.size(); ++i) {
-			if (elements.get(i) > elements.get(argmax)) {
-				argmax = i;
-			}
+	/** */
+	@Override
+	public Derivation multiply(List<Derivation> derivations) {
+		double product = 1.0;
+		for (Derivation d : derivations) {
+			product = product * d.getScore();
 		}
-		return argmax;
+		Derivation result = new Derivation(null, product);
+		return result;
 	}
 	
+	/** Compares the scores of two derivations and returns the maximum */
 	@Override
-	public Double add(List<Double> elements) {
-		Double max = elements.get(0);
-		for (double x : elements) {
-			if (max > x) {
-				max = x;
-			}
-		}
-		return max;
-	}
-
-	@Override
-	public Double multiply(List<Double> elements) {
-		Double product = 1.0;
-		for (double x : elements) {
-			product *= x;
-		}
-		return product;
+	public Derivation add(Derivation element1, Derivation element2) {
+		return (element1.getScore() >= element2.getScore()) ? element1 : element2;
 	}
 
 }

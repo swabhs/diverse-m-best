@@ -10,6 +10,10 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
+/**
+ * Base class for all tests, generates a sample hypergraph to be used for test.
+ * @author swabha
+ */
 public class BaseTest extends TestCase {
 	
 	public BaseTest() {
@@ -64,12 +68,6 @@ public class BaseTest extends TestCase {
 				.setId(7).setParentId(8).addAllChildrenIds(Arrays.asList(6, 7)).setWeight(1.0)
 				.build());
 		return edges;
-	}
-	
-	static Hyperedge createHyperedge(int id, int parent, List<Integer> children, double weight) {
-		Hyperedge.Builder builder = Hyperedge.newBuilder();
-		builder.setId(id).setParentId(parent).setWeight(weight).addAllChildrenIds(children);
-		return builder.build();
 	}
 
 }
