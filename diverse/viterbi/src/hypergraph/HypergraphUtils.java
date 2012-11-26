@@ -38,21 +38,38 @@ public class HypergraphUtils {
 	 */
 	public static Map<Integer, List<Hyperedge>> generateIncomingMap(Hypergraph h) {
 		Map<Integer, List<Hyperedge>> inMap = new HashMap<Integer, List<Hyperedge>>();
-		for (Vertex v : h.getVerticesList()) {
-			inMap.put(v.getId(), new ArrayList<Hyperedge>());
+				
+		Map<Integer, Hyperedge> edgesMap = new HashMap<Integer, Hyperedge>();
+		for (Hyperedge e: h.getEdgesList()) {
+			edgesMap.put(e.getId(), e);
 		}
 		
-		for(Hyperedge e: h.getEdgesList()) {
+		for (Vertex v : h.getVerticesList()) {
+			List<Hyperedge> inedges = new ArrayList<Hyperedge>();
+			for (Integer edge : v.getInEdgeList()) {
+				inedges.add(edgesMap.get(edge));
+			}
+			inMap.put(v.getId(), inedges);			
+		}
+		
+		/* Old Implementation
+		 * for(Hyperedge e: h.getEdgesList()) {
 			List<Hyperedge> incoming = inMap.get(e.getParentId());
 			incoming.add(e);
 			inMap.put(e.getParentId(), incoming);
-		}
+		}*/
 		return inMap;
 	}
 
 	/** Get the list of ids for the vertices which are not parents for any hyperedge */
 	public static List<Integer> getTerminals(Hypergraph h) {
 		List<Integer> terminals = new ArrayList<Integer>();
+		
+		for (Vertex v : h.getVerticesList()) {
+			if (v.getInEdgeList().size() == 0)
+				terminals.add(v.getId());
+		}
+		/* Old implementation
 		// Assuming all the vertices are terminals
 		for (Vertex v : h.getVerticesList()) {
 			terminals.add(v.getId());
@@ -63,7 +80,7 @@ public class HypergraphUtils {
 			if (index != -1) {
 				terminals.remove(index);
 			}
-		}
+		}*/
 		return terminals;
 	}
 	
@@ -140,5 +157,13 @@ public class HypergraphUtils {
 			}
 			System.out.println();
 		}
+	}
+	
+	public static Map<Integer, Vertex> getVerticesMap(Hypergraph h) {
+		Map<Integer, Vertex> vMap = new HashMap<Integer, Vertex>();
+		for (Vertex vertex : h.getVerticesList()) {
+			vMap.put(vertex.getId(), vertex);
+		}
+		return vMap;
 	}
 }

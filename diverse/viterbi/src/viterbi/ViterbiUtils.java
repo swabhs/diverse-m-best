@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Stack;
 
 import semiring.Derivation;
+import utility.PositionVector;
 
 public class ViterbiUtils {
 
@@ -35,5 +36,23 @@ public class ViterbiUtils {
 		List<Hyperedge> backPointers = new ArrayList<Hyperedge>();
 		
 		return backPointers;
+	}
+	
+	/**
+	 * 
+	 * @param dSet
+	 * @param pv
+	 * @return
+	 */
+	public static Derivation getCandidateDerivation(
+			List<List<Derivation>> dSet, PositionVector pv) {
+		double prod = 1.0;
+		for (int i = 0; i < dSet.size(); i++) {
+			if (dSet.get(i).size() <= pv.get(i)) {
+				return null;
+			}
+			prod *= dSet.get(i).get(pv.get(i)).getScore();
+		}
+		return new Derivation(null, prod);
 	}
 }

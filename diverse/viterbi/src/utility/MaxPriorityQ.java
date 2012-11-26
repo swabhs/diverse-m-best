@@ -18,7 +18,7 @@ public class MaxPriorityQ {
 		elements = new ArrayList<Derivation>();
 	}
 	
-	public int getSize() {
+	public int size() {
 		return elements.size();
 	}
 	
@@ -26,6 +26,15 @@ public class MaxPriorityQ {
 		// because the score of a derivation needs to be between 0 and 1.
 		elements.add(new Derivation(null, -0.9)); 
 		heapIncKey(elements, elements.size() - 1, newElement);
+	}
+	
+	public boolean contains(Derivation testD) {
+		for (Derivation d : elements) {
+			if (testD.getScore().equals(d.getScore())) {
+					return true;
+			}
+		}
+		return false;
 	}
 	
 	public Derivation extractMax() {

@@ -3,7 +3,6 @@ package viterbi;
 import hypergraph.HypergraphUtils;
 import hypergraph.HypergraphProto.Hyperedge;
 import hypergraph.HypergraphProto.Hypergraph;
-import hypergraph.HypergraphProto.Vertex;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,102 +11,157 @@ import java.util.Map;
 
 import semiring.Derivation;
 import utility.MaxPriorityQ;
+import utility.PositionVector;
 
+/**
+ * Implementation of Algorithm 2 from the Chiang-Huang paper.
+ * @author swabha
+ *
+ */
 public class Viterbi3 {
-	/** Dynamic programming state saving variables */
-	List<List<Derivation>> derivationsSet;
+	
+	private int k;
+	
+	/** Saves a k sized list of derivations for each vertex */
+	private List<List<Derivation>> derivationsSet;
+	
+	Viterbi3(int k) {
+		super();
+		this.k = k;
+	}
 		
 	/** 
 	 * Initializes the weight of terminal nodes to 1.0 and the rest of the nodes to 0.0
 	 * For every node, initializes the best possible hyperedge to reach it(backPointers) to null
 	 */
-	public List<List<Derivation>> initialize(Hypergraph h) {
+	List<List<Derivation>> initialize(Hypergraph h) {
 		derivationsSet = new ArrayList<List<Derivation>>();
 		List<Integer> terminalIds = HypergraphUtils.getTerminals(h);
 		
-		for (Vertex v : h.getVerticesList()) {
-			if (terminalIds.contains(v.getId())) {
-				Derivation d = new Derivation(null, 1.0);
-				List<Derivation> dList = new ArrayList<Derivation>();
-				dList.add(d);
-				derivationsSet.add(dList);
-			}			
+		for (int i = 0; i < terminalIds.size(); i++) {
+			Derivation d = new Derivation(null, 1.0);
+			List<Derivation> dList = new ArrayList<Derivation>();
+			dList.add(d);
+			derivationsSet.add(dList);			
 		}
 		return derivationsSet;
 	}
 	
 	/**
-	 * Run Viterbi on a semiring and get a list of vertex ids which result in the highest probability structure
+	 * Run Viterbi to get a list of k best derivations for each vertex in hypergraph
 	 */
-	public List<Derivation> run(Hypergraph h, int k) {
+	List<List<Derivation>> run(Hypergraph h) {
 		Map<Integer, List<Hyperedge>> inMap = HypergraphUtils.generateIncomingMap(h);
 		List<Integer> vertices = HypergraphUtils.toposort(h);
+		List<Integer> terminals = HypergraphUtils.getTerminals(h);
+		System.out.println(terminals);
+		System.out.println(vertices);
 		initialize(h);
 		
 		for (Integer v: vertices) {	
-			derivationsSet.add(v, findKBestForVertex(k, inMap.get(v)));
-			
+			List<Hyperedge> edges = inMap.get(v);
+			System.out.println(v + ": " + edges.size());
+			if (!terminals.contains(v)) {
+				derivationsSet.add(v, findKBestForVertex(edges));
+			}
 		}
-		int root = derivationsSet.size() - 1;
-		return derivationsSet.get(root);
+		return derivationsSet;
 	}
 	
 	/** merge + max */
-	List<Derivation> findKBestForVertex(int k, List<Hyperedge> edges) {
-			
-		Map<Hyperedge, List<List<Derivation>>> fullSet = 
-				new HashMap<Hyperedge, List<List<Derivation>>>();
-		Map<Hyperedge, List<Integer>> counter = new HashMap<Hyperedge, List<Integer>>();
+	private List<Derivation> findKBestForVertex(List<Hyperedge> edges) {
+		List<Derivation> kbest = new ArrayList<Derivation>();	
+		MaxPriorityQ q = new MaxPriorityQ();
 		
-		// Initialize data structures
+		Map<Hyperedge, List<List<Derivation>>> derivationMap = 
+				new HashMap<Hyperedge, List<List<Derivation>>>();
+		Map<Hyperedge, PositionVector> positionMap = 
+				new HashMap<Hyperedge, PositionVector>();
+		Map<Hyperedge, Map<Derivation, PositionVector>> fullMap = 
+				new HashMap<Hyperedge, Map<Derivation, PositionVector>>();
+		
+		// Fill in data structures
 		for (Hyperedge e: edges) {
-			counter.put(e, getZeroVector(e.getChildrenIdsCount()));
+			// Set derivationMap
 			List<List<Derivation>> derivationsUnderEdge = new ArrayList<List<Derivation>>();
 			for (Integer u : e.getChildrenIdsList()) {
 				derivationsUnderEdge.add(derivationsSet.get(u));
 			}
-			fullSet.put(e, derivationsUnderEdge);
+			
+			// Set positionMap
+			PositionVector pVector = new PositionVector(-1, e.getChildrenIdsCount());
+			positionMap.put(e, pVector);
+			
+			// Set fullMap
+			Derivation candidate = 
+					ViterbiUtils.getCandidateDerivation(derivationsUnderEdge, pVector);
+			Map<Derivation, PositionVector> posOfDerivation = 
+					new HashMap<Derivation, PositionVector>();
+			posOfDerivation.put(candidate, pVector);
+			fullMap.put(e, posOfDerivation);
+			
+			q.insert(candidate);
 		}
 		
-		List<Derivation> kbest = new ArrayList<Derivation>();
-		MaxPriorityQ candidates = new MaxPriorityQ();
-		while (candidates.getSize() < k) {			
-			generateNextCandidates(fullSet, counter, candidates, edges);
-			kbest.add(candidates.extractMax());			
+		while (kbest.size() < (k - 1) && q.size() > 0) {
+			Derivation best = q.extractMax();
+			kbest.add(best);			
+			
+			// Find out which derivation from which hyperedge was the best and 
+			// get new candidates from that hyperedge
+			for (Hyperedge e: edges) {
+				boolean bestDerivationInEdge = false;
+				Map<Derivation, PositionVector> posOfDerivation = fullMap.get(e);
+				for (Derivation d : posOfDerivation.keySet()) {
+					if (best.getScore().equals(d.getScore())) {
+						positionMap.put(e, posOfDerivation.get(d));
+						posOfDerivation.remove(d);
+						queueNextBestCandidates(
+								derivationMap.get(e), positionMap.get(e), posOfDerivation, q, e);
+						bestDerivationInEdge = true;
+						break;
+					}
+				}
+				if (bestDerivationInEdge) {
+					fullMap.put(e, posOfDerivation);
+					break;
+				}
+			}
+			
+		}
+		
+		if (q.size() > 0) {
+			kbest.add(q.extractMax());
 		}
 		return kbest;
 	}
 	
-	/** generates next |e| candidates to look at */
-	void generateNextCandidates(
-			Map<Hyperedge, List<List<Derivation>>> fullSet,
-			Map<Hyperedge, List<Integer>> counter,
-			MaxPriorityQ candidates,
-			List<Hyperedge> edges) {
-		
-		for (Hyperedge e: edges) {
-			List<List<Derivation>> allD = fullSet.get(e); 
-			List<Integer> vector = counter.get(e);
-			double scoreProd = 1.0;
-			double max = 0.0;
-			int maxPos = 0;
-			for (int i = 0; i < e.getChildrenIdsCount(); i++) {
-				if (allD.get(i).get(vector.get(i)).getScore() > max) {
-					maxPos = i;
-				}
-				scoreProd *= allD.get(i).get(vector.get(i)).getScore();
-			}
-			vector.set(maxPos, vector.get(maxPos) + 1);
-			counter.put(e, vector);
-			candidates.insert(new Derivation (e, scoreProd * e.getWeight()));
+	/**
+	 * Adds to the priority queue all neighboring candidates to the extracted best candidate
+	 * @param fullSet
+	 * @param pVector
+	 * @param q
+	 * @param edges
+	 */
+	void queueNextBestCandidates(
+			List<List<Derivation>> fullSet, 
+			PositionVector counters, 
+			Map<Derivation, PositionVector> posOfDerivation,
+			MaxPriorityQ q, 
+			Hyperedge e) {
+		for (int i = 0; i < counters.size(); i++) {
+			PositionVector candidatePosition = 
+					counters.add(new PositionVector(i, counters.size()));
+			Derivation candidateDerivation = 
+					ViterbiUtils.getCandidateDerivation(derivationsSet, candidatePosition);
+			candidateDerivation.setE(e);
+			candidateDerivation.setScore(candidateDerivation.getScore() * e.getWeight());
+			
+			if (candidateDerivation != null && !q.contains(candidateDerivation)) {
+				posOfDerivation.put(candidateDerivation, candidatePosition);
+				q.insert(candidateDerivation);
+			}				
 		}
 	}
 	
-	private List<Integer> getZeroVector(int size) {
-		List<Integer> zeroVector = new ArrayList<Integer>(size);
-		for (Integer i : zeroVector) {
-			zeroVector.add(new Integer(0));
-		}
-		return zeroVector;
-	}
 }

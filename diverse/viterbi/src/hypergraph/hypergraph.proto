@@ -1,4 +1,4 @@
-package shortestPath;
+package hypergraph;
 
 option java_outer_classname = "HypergraphProto";
 
@@ -6,6 +6,7 @@ message Vertex {
   // Consecutive ids assigned to vertices, starting from 0
   required int32 id = 1;
   required string name = 2;
+  // TODO(swabha): Storing edges and vertices instead of ids could reduce some runtime overhead
   repeated int32 inEdge = 3;
   repeated int32 outEdge = 4;
 } 

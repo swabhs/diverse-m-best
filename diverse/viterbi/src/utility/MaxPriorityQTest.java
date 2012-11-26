@@ -28,5 +28,12 @@ public class MaxPriorityQTest {
 		assertEquals(q.extractMax().getScore(), new Double(0.4));
 		assertNull(q.extractMax());
 	}
+	
+	@Test
+	public void testcontains() {
+		q = new MaxPriorityQ();
+		q.insert(new Derivation(null, 3.0));
+		assertTrue(q.contains(new Derivation(null, 3.0)));
+	}
 
 }

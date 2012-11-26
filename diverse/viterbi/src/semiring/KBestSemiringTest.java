@@ -15,51 +15,59 @@ import org.junit.Test;
  */
 public class KBestSemiringTest {
 
-	private List<Derivation> d1;
-	private List<Derivation> d2;
-	private List<Derivation> d3;
+	List<Derivation> d1;
+	List<Derivation> d2;
+	List<Derivation> d3;
 	
-	private KBestSemiring1 kbest;
+	private KBestSemiring kbest;
 	
 	public KBestSemiringTest() {
 		super();
 		d1 = new ArrayList<Derivation>();
-		d1.add(new Derivation(null, 0.68));
 		d1.add(new Derivation(null, 0.6));
+		d1.add(new Derivation(null, 0.5));
 		d1.add(new Derivation(null, 0.1));
 		
 		d2 = new ArrayList<Derivation>();
-		d2.add(new Derivation(null, 0.91));
-		d2.add(new Derivation(null, 0.48));
-		d2.add(new Derivation(null, 0.02));
+		d2.add(new Derivation(null, 0.9));
+		d2.add(new Derivation(null, 0.4));
+		d2.add(new Derivation(null, 0.0));
 		
 		d3 = new ArrayList<Derivation>();
-		d3.add(new Derivation(null, 0.74));
-		d3.add(new Derivation(null, 0.732));
-		d3.add(new Derivation(null, 0.0));
+		d3.add(new Derivation(null, 0.7));
+		d3.add(new Derivation(null, 0.6));
+		d3.add(new Derivation(null, 0.1));
 		
-		kbest = new KBestSemiring1(3);
+		kbest = new KBestSemiring(3);
 	}
 	
 	@Test
 	public void testAdd() {
-		List<Derivation> expected = Arrays.asList(new Derivation(null, 0.91),
-				new Derivation(null, 0.68), new Derivation(null, 0.6));
-		System.out.println("adder");
+		List<Double> expectedScores = Arrays.asList(0.9, 0.6, 0.5);
 		List<Derivation> actual = kbest.add(d1, d2);
 		
+		List<Double> actualScores = new ArrayList<Double>();
 		for (Derivation d : actual) {
-			System.out.println(d.getScore());
+			actualScores.add(d.getScore());
 		}
+		System.out.println(actualScores);
+		assertTrue(expectedScores.equals(actualScores));
 	}
 	
 	@Test
 	public void testMultiply() {
-		System.out.println("multiplier");
-		List<Derivation> actual = (kbest.multiply(Arrays.asList(d1, d2, d3)));
+		List<Double> expectedScores = Arrays.asList(0.378, 0.324, 0.315);;
+		
+		List<List<Derivation>> derivations =  new ArrayList<List<Derivation>>();
+		derivations.add(d1);
+		derivations.add(d2);
+		derivations.add(d3);
+		List<Derivation> actual = (kbest.multiply(derivations));
+		List<Double> actualScores = new ArrayList<Double>();
 		for (Derivation d : actual) {
-			System.out.println(d.getScore());
+			actualScores.add(d.getScore());
 		}
+		assertTrue(expectedScores.equals(actualScores));
 	}
 
 }

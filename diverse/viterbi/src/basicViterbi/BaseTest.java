@@ -29,15 +29,24 @@ public class BaseTest extends TestCase {
 	
 	static List<Vertex> createVertices() {
 		List<Vertex> vertices = new ArrayList<Vertex>();
-		vertices.add(Vertex.newBuilder().setId(0).setName("the").build());
-		vertices.add(Vertex.newBuilder().setId(1).setName("man").build());
-		vertices.add(Vertex.newBuilder().setId(2).setName("laughed").build());
-		vertices.add(Vertex.newBuilder().setId(3).setName("V").build());
-		vertices.add(Vertex.newBuilder().setId(4).setName("N").build());
-		vertices.add(Vertex.newBuilder().setId(5).setName("D").build());
-		vertices.add(Vertex.newBuilder().setId(6).setName("NP").build());
-		vertices.add(Vertex.newBuilder().setId(7).setName("VP").build());
-		vertices.add(Vertex.newBuilder().setId(8).setName("S").build());
+		vertices.add(Vertex.newBuilder().setId(0).setName("the")
+				.addAllOutEdge(Arrays.asList(0)).build());
+		vertices.add(Vertex.newBuilder().setId(1).setName("man")
+				.addAllOutEdge(Arrays.asList(1)).build());
+		vertices.add(Vertex.newBuilder().setId(2).setName("laughed")
+				.addAllOutEdge(Arrays.asList(2)).build());
+		vertices.add(Vertex.newBuilder().setId(3).setName("V")
+				.addAllInEdge(Arrays.asList(2)).addAllOutEdge(Arrays.asList(5, 6)).build());
+		vertices.add(Vertex.newBuilder().setId(4).setName("N")
+				.addAllInEdge(Arrays.asList(1)).addAllOutEdge(Arrays.asList(3, 4)).build());
+		vertices.add(Vertex.newBuilder().setId(5).setName("D")
+				.addAllInEdge(Arrays.asList(0)).addAllOutEdge(Arrays.asList(3)).build());
+		vertices.add(Vertex.newBuilder().setId(6).setName("NP")
+				.addAllInEdge(Arrays.asList(3, 4)).addAllOutEdge(Arrays.asList(6, 7)).build());
+		vertices.add(Vertex.newBuilder().setId(7).setName("VP")
+				.addAllInEdge(Arrays.asList(5, 6)).addAllOutEdge(Arrays.asList(7)).build());
+		vertices.add(Vertex.newBuilder().setId(8).setName("S")
+				.addAllInEdge(Arrays.asList(7)).build());
 		return vertices;
 	}
 	

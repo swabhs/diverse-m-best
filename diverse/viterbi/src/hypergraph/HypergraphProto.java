@@ -18,6 +18,16 @@ public final class HypergraphProto {
     // required string name = 2;
     boolean hasName();
     String getName();
+    
+    // repeated int32 inEdge = 3;
+    java.util.List<java.lang.Integer> getInEdgeList();
+    int getInEdgeCount();
+    int getInEdge(int index);
+    
+    // repeated int32 outEdge = 4;
+    java.util.List<java.lang.Integer> getOutEdgeList();
+    int getOutEdgeCount();
+    int getOutEdge(int index);
   }
   public static final class Vertex extends
       com.google.protobuf.GeneratedMessage
@@ -90,9 +100,39 @@ public final class HypergraphProto {
       }
     }
     
+    // repeated int32 inEdge = 3;
+    public static final int INEDGE_FIELD_NUMBER = 3;
+    private java.util.List<java.lang.Integer> inEdge_;
+    public java.util.List<java.lang.Integer>
+        getInEdgeList() {
+      return inEdge_;
+    }
+    public int getInEdgeCount() {
+      return inEdge_.size();
+    }
+    public int getInEdge(int index) {
+      return inEdge_.get(index);
+    }
+    
+    // repeated int32 outEdge = 4;
+    public static final int OUTEDGE_FIELD_NUMBER = 4;
+    private java.util.List<java.lang.Integer> outEdge_;
+    public java.util.List<java.lang.Integer>
+        getOutEdgeList() {
+      return outEdge_;
+    }
+    public int getOutEdgeCount() {
+      return outEdge_.size();
+    }
+    public int getOutEdge(int index) {
+      return outEdge_.get(index);
+    }
+    
     private void initFields() {
       id_ = 0;
       name_ = "";
+      inEdge_ = java.util.Collections.emptyList();;
+      outEdge_ = java.util.Collections.emptyList();;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -120,6 +160,12 @@ public final class HypergraphProto {
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         output.writeBytes(2, getNameBytes());
       }
+      for (int i = 0; i < inEdge_.size(); i++) {
+        output.writeInt32(3, inEdge_.get(i));
+      }
+      for (int i = 0; i < outEdge_.size(); i++) {
+        output.writeInt32(4, outEdge_.get(i));
+      }
       getUnknownFields().writeTo(output);
     }
     
@@ -137,6 +183,24 @@ public final class HypergraphProto {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(2, getNameBytes());
       }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < inEdge_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeInt32SizeNoTag(inEdge_.get(i));
+        }
+        size += dataSize;
+        size += 1 * getInEdgeList().size();
+      }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < outEdge_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeInt32SizeNoTag(outEdge_.get(i));
+        }
+        size += dataSize;
+        size += 1 * getOutEdgeList().size();
+      }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
       return size;
@@ -149,41 +213,41 @@ public final class HypergraphProto {
       return super.writeReplace();
     }
     
-    public static hypergraph.HypergraphProto.Vertex parseFrom(
+    public static HypergraphProto.Vertex parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return newBuilder().mergeFrom(data).buildParsed();
     }
-    public static hypergraph.HypergraphProto.Vertex parseFrom(
+    public static HypergraphProto.Vertex parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return newBuilder().mergeFrom(data, extensionRegistry)
                .buildParsed();
     }
-    public static hypergraph.HypergraphProto.Vertex parseFrom(byte[] data)
+    public static HypergraphProto.Vertex parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return newBuilder().mergeFrom(data).buildParsed();
     }
-    public static hypergraph.HypergraphProto.Vertex parseFrom(
+    public static HypergraphProto.Vertex parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return newBuilder().mergeFrom(data, extensionRegistry)
                .buildParsed();
     }
-    public static hypergraph.HypergraphProto.Vertex parseFrom(java.io.InputStream input)
+    public static HypergraphProto.Vertex parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return newBuilder().mergeFrom(input).buildParsed();
     }
-    public static hypergraph.HypergraphProto.Vertex parseFrom(
+    public static HypergraphProto.Vertex parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return newBuilder().mergeFrom(input, extensionRegistry)
                .buildParsed();
     }
-    public static hypergraph.HypergraphProto.Vertex parseDelimitedFrom(java.io.InputStream input)
+    public static HypergraphProto.Vertex parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       Builder builder = newBuilder();
       if (builder.mergeDelimitedFrom(input)) {
@@ -192,7 +256,7 @@ public final class HypergraphProto {
         return null;
       }
     }
-    public static hypergraph.HypergraphProto.Vertex parseDelimitedFrom(
+    public static HypergraphProto.Vertex parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -203,12 +267,12 @@ public final class HypergraphProto {
         return null;
       }
     }
-    public static hypergraph.HypergraphProto.Vertex parseFrom(
+    public static HypergraphProto.Vertex parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return newBuilder().mergeFrom(input).buildParsed();
     }
-    public static hypergraph.HypergraphProto.Vertex parseFrom(
+    public static HypergraphProto.Vertex parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -218,7 +282,7 @@ public final class HypergraphProto {
     
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(hypergraph.HypergraphProto.Vertex prototype) {
+    public static Builder newBuilder(HypergraphProto.Vertex prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
@@ -231,18 +295,18 @@ public final class HypergraphProto {
     }
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements hypergraph.HypergraphProto.VertexOrBuilder {
+       implements HypergraphProto.VertexOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return hypergraph.HypergraphProto.internal_static_shortestPath_Vertex_descriptor;
+        return HypergraphProto.internal_static_shortestPath_Vertex_descriptor;
       }
       
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return hypergraph.HypergraphProto.internal_static_shortestPath_Vertex_fieldAccessorTable;
+        return HypergraphProto.internal_static_shortestPath_Vertex_fieldAccessorTable;
       }
       
-      // Construct using shortestPath.HypergraphProto.Vertex.newBuilder()
+      // Construct using HypergraphProto.Vertex.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -265,6 +329,10 @@ public final class HypergraphProto {
         bitField0_ = (bitField0_ & ~0x00000001);
         name_ = "";
         bitField0_ = (bitField0_ & ~0x00000002);
+        inEdge_ = java.util.Collections.emptyList();;
+        bitField0_ = (bitField0_ & ~0x00000004);
+        outEdge_ = java.util.Collections.emptyList();;
+        bitField0_ = (bitField0_ & ~0x00000008);
         return this;
       }
       
@@ -274,24 +342,24 @@ public final class HypergraphProto {
       
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return hypergraph.HypergraphProto.Vertex.getDescriptor();
+        return HypergraphProto.Vertex.getDescriptor();
       }
       
-      public hypergraph.HypergraphProto.Vertex getDefaultInstanceForType() {
-        return hypergraph.HypergraphProto.Vertex.getDefaultInstance();
+      public HypergraphProto.Vertex getDefaultInstanceForType() {
+        return HypergraphProto.Vertex.getDefaultInstance();
       }
       
-      public hypergraph.HypergraphProto.Vertex build() {
-        hypergraph.HypergraphProto.Vertex result = buildPartial();
+      public HypergraphProto.Vertex build() {
+        HypergraphProto.Vertex result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
       
-      private hypergraph.HypergraphProto.Vertex buildParsed()
+      private HypergraphProto.Vertex buildParsed()
           throws com.google.protobuf.InvalidProtocolBufferException {
-        hypergraph.HypergraphProto.Vertex result = buildPartial();
+        HypergraphProto.Vertex result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(
             result).asInvalidProtocolBufferException();
@@ -299,8 +367,8 @@ public final class HypergraphProto {
         return result;
       }
       
-      public hypergraph.HypergraphProto.Vertex buildPartial() {
-        hypergraph.HypergraphProto.Vertex result = new hypergraph.HypergraphProto.Vertex(this);
+      public HypergraphProto.Vertex buildPartial() {
+        HypergraphProto.Vertex result = new HypergraphProto.Vertex(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
@@ -311,27 +379,57 @@ public final class HypergraphProto {
           to_bitField0_ |= 0x00000002;
         }
         result.name_ = name_;
+        if (((bitField0_ & 0x00000004) == 0x00000004)) {
+          inEdge_ = java.util.Collections.unmodifiableList(inEdge_);
+          bitField0_ = (bitField0_ & ~0x00000004);
+        }
+        result.inEdge_ = inEdge_;
+        if (((bitField0_ & 0x00000008) == 0x00000008)) {
+          outEdge_ = java.util.Collections.unmodifiableList(outEdge_);
+          bitField0_ = (bitField0_ & ~0x00000008);
+        }
+        result.outEdge_ = outEdge_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
       }
       
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof hypergraph.HypergraphProto.Vertex) {
-          return mergeFrom((hypergraph.HypergraphProto.Vertex)other);
+        if (other instanceof HypergraphProto.Vertex) {
+          return mergeFrom((HypergraphProto.Vertex)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
       
-      public Builder mergeFrom(hypergraph.HypergraphProto.Vertex other) {
-        if (other == hypergraph.HypergraphProto.Vertex.getDefaultInstance()) return this;
+      public Builder mergeFrom(HypergraphProto.Vertex other) {
+        if (other == HypergraphProto.Vertex.getDefaultInstance()) return this;
         if (other.hasId()) {
           setId(other.getId());
         }
         if (other.hasName()) {
           setName(other.getName());
+        }
+        if (!other.inEdge_.isEmpty()) {
+          if (inEdge_.isEmpty()) {
+            inEdge_ = other.inEdge_;
+            bitField0_ = (bitField0_ & ~0x00000004);
+          } else {
+            ensureInEdgeIsMutable();
+            inEdge_.addAll(other.inEdge_);
+          }
+          onChanged();
+        }
+        if (!other.outEdge_.isEmpty()) {
+          if (outEdge_.isEmpty()) {
+            outEdge_ = other.outEdge_;
+            bitField0_ = (bitField0_ & ~0x00000008);
+          } else {
+            ensureOutEdgeIsMutable();
+            outEdge_.addAll(other.outEdge_);
+          }
+          onChanged();
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -380,6 +478,34 @@ public final class HypergraphProto {
             case 18: {
               bitField0_ |= 0x00000002;
               name_ = input.readBytes();
+              break;
+            }
+            case 24: {
+              ensureInEdgeIsMutable();
+              inEdge_.add(input.readInt32());
+              break;
+            }
+            case 26: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              while (input.getBytesUntilLimit() > 0) {
+                addInEdge(input.readInt32());
+              }
+              input.popLimit(limit);
+              break;
+            }
+            case 32: {
+              ensureOutEdgeIsMutable();
+              outEdge_.add(input.readInt32());
+              break;
+            }
+            case 34: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              while (input.getBytesUntilLimit() > 0) {
+                addOutEdge(input.readInt32());
+              }
+              input.popLimit(limit);
               break;
             }
           }
@@ -445,7 +571,97 @@ public final class HypergraphProto {
         onChanged();
       }
       
-      // @@protoc_insertion_point(builder_scope:shortestPath.Vertex)
+      // repeated int32 inEdge = 3;
+      private java.util.List<java.lang.Integer> inEdge_ = java.util.Collections.emptyList();;
+      private void ensureInEdgeIsMutable() {
+        if (!((bitField0_ & 0x00000004) == 0x00000004)) {
+          inEdge_ = new java.util.ArrayList<java.lang.Integer>(inEdge_);
+          bitField0_ |= 0x00000004;
+         }
+      }
+      public java.util.List<java.lang.Integer>
+          getInEdgeList() {
+        return java.util.Collections.unmodifiableList(inEdge_);
+      }
+      public int getInEdgeCount() {
+        return inEdge_.size();
+      }
+      public int getInEdge(int index) {
+        return inEdge_.get(index);
+      }
+      public Builder setInEdge(
+          int index, int value) {
+        ensureInEdgeIsMutable();
+        inEdge_.set(index, value);
+        onChanged();
+        return this;
+      }
+      public Builder addInEdge(int value) {
+        ensureInEdgeIsMutable();
+        inEdge_.add(value);
+        onChanged();
+        return this;
+      }
+      public Builder addAllInEdge(
+          java.lang.Iterable<? extends java.lang.Integer> values) {
+        ensureInEdgeIsMutable();
+        super.addAll(values, inEdge_);
+        onChanged();
+        return this;
+      }
+      public Builder clearInEdge() {
+        inEdge_ = java.util.Collections.emptyList();;
+        bitField0_ = (bitField0_ & ~0x00000004);
+        onChanged();
+        return this;
+      }
+      
+      // repeated int32 outEdge = 4;
+      private java.util.List<java.lang.Integer> outEdge_ = java.util.Collections.emptyList();;
+      private void ensureOutEdgeIsMutable() {
+        if (!((bitField0_ & 0x00000008) == 0x00000008)) {
+          outEdge_ = new java.util.ArrayList<java.lang.Integer>(outEdge_);
+          bitField0_ |= 0x00000008;
+         }
+      }
+      public java.util.List<java.lang.Integer>
+          getOutEdgeList() {
+        return java.util.Collections.unmodifiableList(outEdge_);
+      }
+      public int getOutEdgeCount() {
+        return outEdge_.size();
+      }
+      public int getOutEdge(int index) {
+        return outEdge_.get(index);
+      }
+      public Builder setOutEdge(
+          int index, int value) {
+        ensureOutEdgeIsMutable();
+        outEdge_.set(index, value);
+        onChanged();
+        return this;
+      }
+      public Builder addOutEdge(int value) {
+        ensureOutEdgeIsMutable();
+        outEdge_.add(value);
+        onChanged();
+        return this;
+      }
+      public Builder addAllOutEdge(
+          java.lang.Iterable<? extends java.lang.Integer> values) {
+        ensureOutEdgeIsMutable();
+        super.addAll(values, outEdge_);
+        onChanged();
+        return this;
+      }
+      public Builder clearOutEdge() {
+        outEdge_ = java.util.Collections.emptyList();;
+        bitField0_ = (bitField0_ & ~0x00000008);
+        onChanged();
+        return this;
+      }
+      
+      // @@protoc_insertion_point(builder_scope:Vertex)
     }
     
     static {
@@ -453,7 +669,7 @@ public final class HypergraphProto {
       defaultInstance.initFields();
     }
     
-    // @@protoc_insertion_point(class_scope:shortestPath.Vertex)
+    // @@protoc_insertion_point(class_scope:Vertex)
   }
   
   public interface HyperedgeOrBuilder
@@ -629,41 +845,41 @@ public final class HypergraphProto {
       return super.writeReplace();
     }
     
-    public static hypergraph.HypergraphProto.Hyperedge parseFrom(
+    public static HypergraphProto.Hyperedge parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return newBuilder().mergeFrom(data).buildParsed();
     }
-    public static hypergraph.HypergraphProto.Hyperedge parseFrom(
+    public static HypergraphProto.Hyperedge parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return newBuilder().mergeFrom(data, extensionRegistry)
                .buildParsed();
     }
-    public static hypergraph.HypergraphProto.Hyperedge parseFrom(byte[] data)
+    public static HypergraphProto.Hyperedge parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return newBuilder().mergeFrom(data).buildParsed();
     }
-    public static hypergraph.HypergraphProto.Hyperedge parseFrom(
+    public static HypergraphProto.Hyperedge parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return newBuilder().mergeFrom(data, extensionRegistry)
                .buildParsed();
     }
-    public static hypergraph.HypergraphProto.Hyperedge parseFrom(java.io.InputStream input)
+    public static HypergraphProto.Hyperedge parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return newBuilder().mergeFrom(input).buildParsed();
     }
-    public static hypergraph.HypergraphProto.Hyperedge parseFrom(
+    public static HypergraphProto.Hyperedge parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return newBuilder().mergeFrom(input, extensionRegistry)
                .buildParsed();
     }
-    public static hypergraph.HypergraphProto.Hyperedge parseDelimitedFrom(java.io.InputStream input)
+    public static HypergraphProto.Hyperedge parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       Builder builder = newBuilder();
       if (builder.mergeDelimitedFrom(input)) {
@@ -672,7 +888,7 @@ public final class HypergraphProto {
         return null;
       }
     }
-    public static hypergraph.HypergraphProto.Hyperedge parseDelimitedFrom(
+    public static HypergraphProto.Hyperedge parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -683,12 +899,12 @@ public final class HypergraphProto {
         return null;
       }
     }
-    public static hypergraph.HypergraphProto.Hyperedge parseFrom(
+    public static HypergraphProto.Hyperedge parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return newBuilder().mergeFrom(input).buildParsed();
     }
-    public static hypergraph.HypergraphProto.Hyperedge parseFrom(
+    public static HypergraphProto.Hyperedge parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -698,7 +914,7 @@ public final class HypergraphProto {
     
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(hypergraph.HypergraphProto.Hyperedge prototype) {
+    public static Builder newBuilder(HypergraphProto.Hyperedge prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
@@ -711,18 +927,18 @@ public final class HypergraphProto {
     }
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements hypergraph.HypergraphProto.HyperedgeOrBuilder {
+       implements HypergraphProto.HyperedgeOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return hypergraph.HypergraphProto.internal_static_shortestPath_Hyperedge_descriptor;
+        return HypergraphProto.internal_static_shortestPath_Hyperedge_descriptor;
       }
       
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return hypergraph.HypergraphProto.internal_static_shortestPath_Hyperedge_fieldAccessorTable;
+        return HypergraphProto.internal_static_shortestPath_Hyperedge_fieldAccessorTable;
       }
       
-      // Construct using shortestPath.HypergraphProto.Hyperedge.newBuilder()
+      // Construct using HypergraphProto.Hyperedge.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -758,24 +974,24 @@ public final class HypergraphProto {
       
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return hypergraph.HypergraphProto.Hyperedge.getDescriptor();
+        return HypergraphProto.Hyperedge.getDescriptor();
       }
       
-      public hypergraph.HypergraphProto.Hyperedge getDefaultInstanceForType() {
-        return hypergraph.HypergraphProto.Hyperedge.getDefaultInstance();
+      public HypergraphProto.Hyperedge getDefaultInstanceForType() {
+        return HypergraphProto.Hyperedge.getDefaultInstance();
       }
       
-      public hypergraph.HypergraphProto.Hyperedge build() {
-        hypergraph.HypergraphProto.Hyperedge result = buildPartial();
+      public HypergraphProto.Hyperedge build() {
+        HypergraphProto.Hyperedge result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
       
-      private hypergraph.HypergraphProto.Hyperedge buildParsed()
+      private HypergraphProto.Hyperedge buildParsed()
           throws com.google.protobuf.InvalidProtocolBufferException {
-        hypergraph.HypergraphProto.Hyperedge result = buildPartial();
+        HypergraphProto.Hyperedge result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(
             result).asInvalidProtocolBufferException();
@@ -783,8 +999,8 @@ public final class HypergraphProto {
         return result;
       }
       
-      public hypergraph.HypergraphProto.Hyperedge buildPartial() {
-        hypergraph.HypergraphProto.Hyperedge result = new hypergraph.HypergraphProto.Hyperedge(this);
+      public HypergraphProto.Hyperedge buildPartial() {
+        HypergraphProto.Hyperedge result = new HypergraphProto.Hyperedge(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
@@ -810,16 +1026,16 @@ public final class HypergraphProto {
       }
       
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof hypergraph.HypergraphProto.Hyperedge) {
-          return mergeFrom((hypergraph.HypergraphProto.Hyperedge)other);
+        if (other instanceof HypergraphProto.Hyperedge) {
+          return mergeFrom((HypergraphProto.Hyperedge)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
       
-      public Builder mergeFrom(hypergraph.HypergraphProto.Hyperedge other) {
-        if (other == hypergraph.HypergraphProto.Hyperedge.getDefaultInstance()) return this;
+      public Builder mergeFrom(HypergraphProto.Hyperedge other) {
+        if (other == HypergraphProto.Hyperedge.getDefaultInstance()) return this;
         if (other.hasId()) {
           setId(other.getId());
         }
@@ -1021,7 +1237,7 @@ public final class HypergraphProto {
         return this;
       }
       
-      // @@protoc_insertion_point(builder_scope:shortestPath.Hyperedge)
+      // @@protoc_insertion_point(builder_scope:Hyperedge)
     }
     
     static {
@@ -1029,30 +1245,30 @@ public final class HypergraphProto {
       defaultInstance.initFields();
     }
     
-    // @@protoc_insertion_point(class_scope:shortestPath.Hyperedge)
+    // @@protoc_insertion_point(class_scope:Hyperedge)
   }
   
   public interface HypergraphOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
     
-    // repeated .shortestPath.Vertex vertices = 1;
-    java.util.List<hypergraph.HypergraphProto.Vertex> 
+    // repeated .Vertex vertices = 1;
+    java.util.List<HypergraphProto.Vertex> 
         getVerticesList();
-    hypergraph.HypergraphProto.Vertex getVertices(int index);
+    HypergraphProto.Vertex getVertices(int index);
     int getVerticesCount();
-    java.util.List<? extends hypergraph.HypergraphProto.VertexOrBuilder> 
+    java.util.List<? extends HypergraphProto.VertexOrBuilder> 
         getVerticesOrBuilderList();
-    hypergraph.HypergraphProto.VertexOrBuilder getVerticesOrBuilder(
+    HypergraphProto.VertexOrBuilder getVerticesOrBuilder(
         int index);
     
-    // repeated .shortestPath.Hyperedge edges = 2;
-    java.util.List<hypergraph.HypergraphProto.Hyperedge> 
+    // repeated .Hyperedge edges = 2;
+    java.util.List<HypergraphProto.Hyperedge> 
         getEdgesList();
-    hypergraph.HypergraphProto.Hyperedge getEdges(int index);
+    HypergraphProto.Hyperedge getEdges(int index);
     int getEdgesCount();
-    java.util.List<? extends hypergraph.HypergraphProto.HyperedgeOrBuilder> 
+    java.util.List<? extends HypergraphProto.HyperedgeOrBuilder> 
         getEdgesOrBuilderList();
-    hypergraph.HypergraphProto.HyperedgeOrBuilder getEdgesOrBuilder(
+    HypergraphProto.HyperedgeOrBuilder getEdgesOrBuilder(
         int index);
   }
   public static final class Hypergraph extends
@@ -1083,44 +1299,44 @@ public final class HypergraphProto {
       return hypergraph.HypergraphProto.internal_static_shortestPath_Hypergraph_fieldAccessorTable;
     }
     
-    // repeated .shortestPath.Vertex vertices = 1;
+    // repeated .Vertex vertices = 1;
     public static final int VERTICES_FIELD_NUMBER = 1;
-    private java.util.List<hypergraph.HypergraphProto.Vertex> vertices_;
-    public java.util.List<hypergraph.HypergraphProto.Vertex> getVerticesList() {
+    private java.util.List<HypergraphProto.Vertex> vertices_;
+    public java.util.List<HypergraphProto.Vertex> getVerticesList() {
       return vertices_;
     }
-    public java.util.List<? extends hypergraph.HypergraphProto.VertexOrBuilder> 
+    public java.util.List<? extends HypergraphProto.VertexOrBuilder> 
         getVerticesOrBuilderList() {
       return vertices_;
     }
     public int getVerticesCount() {
       return vertices_.size();
     }
-    public hypergraph.HypergraphProto.Vertex getVertices(int index) {
+    public HypergraphProto.Vertex getVertices(int index) {
       return vertices_.get(index);
     }
-    public hypergraph.HypergraphProto.VertexOrBuilder getVerticesOrBuilder(
+    public HypergraphProto.VertexOrBuilder getVerticesOrBuilder(
         int index) {
       return vertices_.get(index);
     }
     
-    // repeated .shortestPath.Hyperedge edges = 2;
+    // repeated .Hyperedge edges = 2;
     public static final int EDGES_FIELD_NUMBER = 2;
-    private java.util.List<hypergraph.HypergraphProto.Hyperedge> edges_;
-    public java.util.List<hypergraph.HypergraphProto.Hyperedge> getEdgesList() {
+    private java.util.List<HypergraphProto.Hyperedge> edges_;
+    public java.util.List<HypergraphProto.Hyperedge> getEdgesList() {
       return edges_;
     }
-    public java.util.List<? extends hypergraph.HypergraphProto.HyperedgeOrBuilder> 
+    public java.util.List<? extends HypergraphProto.HyperedgeOrBuilder> 
         getEdgesOrBuilderList() {
       return edges_;
     }
     public int getEdgesCount() {
       return edges_.size();
     }
-    public hypergraph.HypergraphProto.Hyperedge getEdges(int index) {
+    public HypergraphProto.Hyperedge getEdges(int index) {
       return edges_.get(index);
     }
-    public hypergraph.HypergraphProto.HyperedgeOrBuilder getEdgesOrBuilder(
+    public HypergraphProto.HyperedgeOrBuilder getEdgesOrBuilder(
         int index) {
       return edges_.get(index);
     }
@@ -1188,41 +1404,41 @@ public final class HypergraphProto {
       return super.writeReplace();
     }
     
-    public static hypergraph.HypergraphProto.Hypergraph parseFrom(
+    public static HypergraphProto.Hypergraph parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return newBuilder().mergeFrom(data).buildParsed();
     }
-    public static hypergraph.HypergraphProto.Hypergraph parseFrom(
+    public static HypergraphProto.Hypergraph parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return newBuilder().mergeFrom(data, extensionRegistry)
                .buildParsed();
     }
-    public static hypergraph.HypergraphProto.Hypergraph parseFrom(byte[] data)
+    public static HypergraphProto.Hypergraph parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return newBuilder().mergeFrom(data).buildParsed();
     }
-    public static hypergraph.HypergraphProto.Hypergraph parseFrom(
+    public static HypergraphProto.Hypergraph parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return newBuilder().mergeFrom(data, extensionRegistry)
                .buildParsed();
     }
-    public static hypergraph.HypergraphProto.Hypergraph parseFrom(java.io.InputStream input)
+    public static HypergraphProto.Hypergraph parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return newBuilder().mergeFrom(input).buildParsed();
     }
-    public static hypergraph.HypergraphProto.Hypergraph parseFrom(
+    public static HypergraphProto.Hypergraph parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return newBuilder().mergeFrom(input, extensionRegistry)
                .buildParsed();
     }
-    public static hypergraph.HypergraphProto.Hypergraph parseDelimitedFrom(java.io.InputStream input)
+    public static HypergraphProto.Hypergraph parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       Builder builder = newBuilder();
       if (builder.mergeDelimitedFrom(input)) {
@@ -1231,7 +1447,7 @@ public final class HypergraphProto {
         return null;
       }
     }
-    public static hypergraph.HypergraphProto.Hypergraph parseDelimitedFrom(
+    public static HypergraphProto.Hypergraph parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -1242,12 +1458,12 @@ public final class HypergraphProto {
         return null;
       }
     }
-    public static hypergraph.HypergraphProto.Hypergraph parseFrom(
+    public static HypergraphProto.Hypergraph parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return newBuilder().mergeFrom(input).buildParsed();
     }
-    public static hypergraph.HypergraphProto.Hypergraph parseFrom(
+    public static HypergraphProto.Hypergraph parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -1257,7 +1473,7 @@ public final class HypergraphProto {
     
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(hypergraph.HypergraphProto.Hypergraph prototype) {
+    public static Builder newBuilder(HypergraphProto.Hypergraph prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
@@ -1270,18 +1486,18 @@ public final class HypergraphProto {
     }
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements hypergraph.HypergraphProto.HypergraphOrBuilder {
+       implements HypergraphProto.HypergraphOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return hypergraph.HypergraphProto.internal_static_shortestPath_Hypergraph_descriptor;
+        return HypergraphProto.internal_static_shortestPath_Hypergraph_descriptor;
       }
       
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return hypergraph.HypergraphProto.internal_static_shortestPath_Hypergraph_fieldAccessorTable;
+        return HypergraphProto.internal_static_shortestPath_Hypergraph_fieldAccessorTable;
       }
       
-      // Construct using shortestPath.HypergraphProto.Hypergraph.newBuilder()
+      // Construct using HypergraphProto.Hypergraph.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -1323,24 +1539,24 @@ public final class HypergraphProto {
       
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return hypergraph.HypergraphProto.Hypergraph.getDescriptor();
+        return HypergraphProto.Hypergraph.getDescriptor();
       }
       
-      public hypergraph.HypergraphProto.Hypergraph getDefaultInstanceForType() {
-        return hypergraph.HypergraphProto.Hypergraph.getDefaultInstance();
+      public HypergraphProto.Hypergraph getDefaultInstanceForType() {
+        return HypergraphProto.Hypergraph.getDefaultInstance();
       }
       
-      public hypergraph.HypergraphProto.Hypergraph build() {
-        hypergraph.HypergraphProto.Hypergraph result = buildPartial();
+      public HypergraphProto.Hypergraph build() {
+        HypergraphProto.Hypergraph result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
       
-      private hypergraph.HypergraphProto.Hypergraph buildParsed()
+      private HypergraphProto.Hypergraph buildParsed()
           throws com.google.protobuf.InvalidProtocolBufferException {
-        hypergraph.HypergraphProto.Hypergraph result = buildPartial();
+        HypergraphProto.Hypergraph result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(
             result).asInvalidProtocolBufferException();
@@ -1348,8 +1564,8 @@ public final class HypergraphProto {
         return result;
       }
       
-      public hypergraph.HypergraphProto.Hypergraph buildPartial() {
-        hypergraph.HypergraphProto.Hypergraph result = new hypergraph.HypergraphProto.Hypergraph(this);
+      public HypergraphProto.Hypergraph buildPartial() {
+        HypergraphProto.Hypergraph result = new HypergraphProto.Hypergraph(this);
         int from_bitField0_ = bitField0_;
         if (verticesBuilder_ == null) {
           if (((bitField0_ & 0x00000001) == 0x00000001)) {
@@ -1374,16 +1590,16 @@ public final class HypergraphProto {
       }
       
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof hypergraph.HypergraphProto.Hypergraph) {
-          return mergeFrom((hypergraph.HypergraphProto.Hypergraph)other);
+        if (other instanceof HypergraphProto.Hypergraph) {
+          return mergeFrom((HypergraphProto.Hypergraph)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
       
-      public Builder mergeFrom(hypergraph.HypergraphProto.Hypergraph other) {
-        if (other == hypergraph.HypergraphProto.Hypergraph.getDefaultInstance()) return this;
+      public Builder mergeFrom(HypergraphProto.Hypergraph other) {
+        if (other == HypergraphProto.Hypergraph.getDefaultInstance()) return this;
         if (verticesBuilder_ == null) {
           if (!other.vertices_.isEmpty()) {
             if (vertices_.isEmpty()) {
@@ -1480,13 +1696,13 @@ public final class HypergraphProto {
               break;
             }
             case 10: {
-              hypergraph.HypergraphProto.Vertex.Builder subBuilder = hypergraph.HypergraphProto.Vertex.newBuilder();
+              HypergraphProto.Vertex.Builder subBuilder = HypergraphProto.Vertex.newBuilder();
               input.readMessage(subBuilder, extensionRegistry);
               addVertices(subBuilder.buildPartial());
               break;
             }
             case 18: {
-              hypergraph.HypergraphProto.Hyperedge.Builder subBuilder = hypergraph.HypergraphProto.Hyperedge.newBuilder();
+              HypergraphProto.Hyperedge.Builder subBuilder = HypergraphProto.Hyperedge.newBuilder();
               input.readMessage(subBuilder, extensionRegistry);
               addEdges(subBuilder.buildPartial());
               break;
@@ -1497,20 +1713,20 @@ public final class HypergraphProto {
       
       private int bitField0_;
       
-      // repeated .shortestPath.Vertex vertices = 1;
-      private java.util.List<hypergraph.HypergraphProto.Vertex> vertices_ =
+      // repeated .Vertex vertices = 1;
+      private java.util.List<HypergraphProto.Vertex> vertices_ =
         java.util.Collections.emptyList();
       private void ensureVerticesIsMutable() {
         if (!((bitField0_ & 0x00000001) == 0x00000001)) {
-          vertices_ = new java.util.ArrayList<hypergraph.HypergraphProto.Vertex>(vertices_);
+          vertices_ = new java.util.ArrayList<HypergraphProto.Vertex>(vertices_);
           bitField0_ |= 0x00000001;
          }
       }
       
       private com.google.protobuf.RepeatedFieldBuilder<
-          hypergraph.HypergraphProto.Vertex, hypergraph.HypergraphProto.Vertex.Builder, hypergraph.HypergraphProto.VertexOrBuilder> verticesBuilder_;
+          HypergraphProto.Vertex, HypergraphProto.Vertex.Builder, HypergraphProto.VertexOrBuilder> verticesBuilder_;
       
-      public java.util.List<hypergraph.HypergraphProto.Vertex> getVerticesList() {
+      public java.util.List<HypergraphProto.Vertex> getVerticesList() {
         if (verticesBuilder_ == null) {
           return java.util.Collections.unmodifiableList(vertices_);
         } else {
@@ -1524,7 +1740,7 @@ public final class HypergraphProto {
           return verticesBuilder_.getCount();
         }
       }
-      public hypergraph.HypergraphProto.Vertex getVertices(int index) {
+      public HypergraphProto.Vertex getVertices(int index) {
         if (verticesBuilder_ == null) {
           return vertices_.get(index);
         } else {
@@ -1532,7 +1748,7 @@ public final class HypergraphProto {
         }
       }
       public Builder setVertices(
-          int index, hypergraph.HypergraphProto.Vertex value) {
+          int index, HypergraphProto.Vertex value) {
         if (verticesBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -1546,7 +1762,7 @@ public final class HypergraphProto {
         return this;
       }
       public Builder setVertices(
-          int index, hypergraph.HypergraphProto.Vertex.Builder builderForValue) {
+          int index, HypergraphProto.Vertex.Builder builderForValue) {
         if (verticesBuilder_ == null) {
           ensureVerticesIsMutable();
           vertices_.set(index, builderForValue.build());
@@ -1556,7 +1772,7 @@ public final class HypergraphProto {
         }
         return this;
       }
-      public Builder addVertices(hypergraph.HypergraphProto.Vertex value) {
+      public Builder addVertices(HypergraphProto.Vertex value) {
         if (verticesBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -1570,7 +1786,7 @@ public final class HypergraphProto {
         return this;
       }
       public Builder addVertices(
-          int index, hypergraph.HypergraphProto.Vertex value) {
+          int index, HypergraphProto.Vertex value) {
         if (verticesBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -1584,7 +1800,7 @@ public final class HypergraphProto {
         return this;
       }
       public Builder addVertices(
-          hypergraph.HypergraphProto.Vertex.Builder builderForValue) {
+          HypergraphProto.Vertex.Builder builderForValue) {
         if (verticesBuilder_ == null) {
           ensureVerticesIsMutable();
           vertices_.add(builderForValue.build());
@@ -1595,7 +1811,7 @@ public final class HypergraphProto {
         return this;
       }
       public Builder addVertices(
-          int index, hypergraph.HypergraphProto.Vertex.Builder builderForValue) {
+          int index, HypergraphProto.Vertex.Builder builderForValue) {
         if (verticesBuilder_ == null) {
           ensureVerticesIsMutable();
           vertices_.add(index, builderForValue.build());
@@ -1606,7 +1822,7 @@ public final class HypergraphProto {
         return this;
       }
       public Builder addAllVertices(
-          java.lang.Iterable<? extends hypergraph.HypergraphProto.Vertex> values) {
+          java.lang.Iterable<? extends HypergraphProto.Vertex> values) {
         if (verticesBuilder_ == null) {
           ensureVerticesIsMutable();
           super.addAll(values, vertices_);
@@ -1636,18 +1852,18 @@ public final class HypergraphProto {
         }
         return this;
       }
-      public hypergraph.HypergraphProto.Vertex.Builder getVerticesBuilder(
+      public HypergraphProto.Vertex.Builder getVerticesBuilder(
           int index) {
         return getVerticesFieldBuilder().getBuilder(index);
       }
-      public hypergraph.HypergraphProto.VertexOrBuilder getVerticesOrBuilder(
+      public HypergraphProto.VertexOrBuilder getVerticesOrBuilder(
           int index) {
         if (verticesBuilder_ == null) {
           return vertices_.get(index);  } else {
           return verticesBuilder_.getMessageOrBuilder(index);
         }
       }
-      public java.util.List<? extends hypergraph.HypergraphProto.VertexOrBuilder> 
+      public java.util.List<? extends HypergraphProto.VertexOrBuilder> 
            getVerticesOrBuilderList() {
         if (verticesBuilder_ != null) {
           return verticesBuilder_.getMessageOrBuilderList();
@@ -1655,25 +1871,25 @@ public final class HypergraphProto {
           return java.util.Collections.unmodifiableList(vertices_);
         }
       }
-      public hypergraph.HypergraphProto.Vertex.Builder addVerticesBuilder() {
+      public HypergraphProto.Vertex.Builder addVerticesBuilder() {
         return getVerticesFieldBuilder().addBuilder(
-            hypergraph.HypergraphProto.Vertex.getDefaultInstance());
+            HypergraphProto.Vertex.getDefaultInstance());
       }
-      public hypergraph.HypergraphProto.Vertex.Builder addVerticesBuilder(
+      public HypergraphProto.Vertex.Builder addVerticesBuilder(
           int index) {
         return getVerticesFieldBuilder().addBuilder(
-            index, hypergraph.HypergraphProto.Vertex.getDefaultInstance());
+            index, HypergraphProto.Vertex.getDefaultInstance());
       }
-      public java.util.List<hypergraph.HypergraphProto.Vertex.Builder> 
+      public java.util.List<HypergraphProto.Vertex.Builder> 
            getVerticesBuilderList() {
         return getVerticesFieldBuilder().getBuilderList();
       }
       private com.google.protobuf.RepeatedFieldBuilder<
-          hypergraph.HypergraphProto.Vertex, hypergraph.HypergraphProto.Vertex.Builder, hypergraph.HypergraphProto.VertexOrBuilder> 
+          HypergraphProto.Vertex, HypergraphProto.Vertex.Builder, HypergraphProto.VertexOrBuilder> 
           getVerticesFieldBuilder() {
         if (verticesBuilder_ == null) {
           verticesBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
-              hypergraph.HypergraphProto.Vertex, hypergraph.HypergraphProto.Vertex.Builder, hypergraph.HypergraphProto.VertexOrBuilder>(
+              HypergraphProto.Vertex, HypergraphProto.Vertex.Builder, HypergraphProto.VertexOrBuilder>(
                   vertices_,
                   ((bitField0_ & 0x00000001) == 0x00000001),
                   getParentForChildren(),
@@ -1683,20 +1899,20 @@ public final class HypergraphProto {
         return verticesBuilder_;
       }
       
-      // repeated .shortestPath.Hyperedge edges = 2;
-      private java.util.List<hypergraph.HypergraphProto.Hyperedge> edges_ =
+      // repeated .Hyperedge edges = 2;
+      private java.util.List<HypergraphProto.Hyperedge> edges_ =
         java.util.Collections.emptyList();
       private void ensureEdgesIsMutable() {
         if (!((bitField0_ & 0x00000002) == 0x00000002)) {
-          edges_ = new java.util.ArrayList<hypergraph.HypergraphProto.Hyperedge>(edges_);
+          edges_ = new java.util.ArrayList<HypergraphProto.Hyperedge>(edges_);
           bitField0_ |= 0x00000002;
          }
       }
       
       private com.google.protobuf.RepeatedFieldBuilder<
-          hypergraph.HypergraphProto.Hyperedge, hypergraph.HypergraphProto.Hyperedge.Builder, hypergraph.HypergraphProto.HyperedgeOrBuilder> edgesBuilder_;
+          HypergraphProto.Hyperedge, HypergraphProto.Hyperedge.Builder, HypergraphProto.HyperedgeOrBuilder> edgesBuilder_;
       
-      public java.util.List<hypergraph.HypergraphProto.Hyperedge> getEdgesList() {
+      public java.util.List<HypergraphProto.Hyperedge> getEdgesList() {
         if (edgesBuilder_ == null) {
           return java.util.Collections.unmodifiableList(edges_);
         } else {
@@ -1710,7 +1926,7 @@ public final class HypergraphProto {
           return edgesBuilder_.getCount();
         }
       }
-      public hypergraph.HypergraphProto.Hyperedge getEdges(int index) {
+      public HypergraphProto.Hyperedge getEdges(int index) {
         if (edgesBuilder_ == null) {
           return edges_.get(index);
         } else {
@@ -1718,7 +1934,7 @@ public final class HypergraphProto {
         }
       }
       public Builder setEdges(
-          int index, hypergraph.HypergraphProto.Hyperedge value) {
+          int index, HypergraphProto.Hyperedge value) {
         if (edgesBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -1732,7 +1948,7 @@ public final class HypergraphProto {
         return this;
       }
       public Builder setEdges(
-          int index, hypergraph.HypergraphProto.Hyperedge.Builder builderForValue) {
+          int index, HypergraphProto.Hyperedge.Builder builderForValue) {
         if (edgesBuilder_ == null) {
           ensureEdgesIsMutable();
           edges_.set(index, builderForValue.build());
@@ -1742,7 +1958,7 @@ public final class HypergraphProto {
         }
         return this;
       }
-      public Builder addEdges(hypergraph.HypergraphProto.Hyperedge value) {
+      public Builder addEdges(HypergraphProto.Hyperedge value) {
         if (edgesBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -1756,7 +1972,7 @@ public final class HypergraphProto {
         return this;
       }
       public Builder addEdges(
-          int index, hypergraph.HypergraphProto.Hyperedge value) {
+          int index, HypergraphProto.Hyperedge value) {
         if (edgesBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -1770,7 +1986,7 @@ public final class HypergraphProto {
         return this;
       }
       public Builder addEdges(
-          hypergraph.HypergraphProto.Hyperedge.Builder builderForValue) {
+          HypergraphProto.Hyperedge.Builder builderForValue) {
         if (edgesBuilder_ == null) {
           ensureEdgesIsMutable();
           edges_.add(builderForValue.build());
@@ -1781,7 +1997,7 @@ public final class HypergraphProto {
         return this;
       }
       public Builder addEdges(
-          int index, hypergraph.HypergraphProto.Hyperedge.Builder builderForValue) {
+          int index, HypergraphProto.Hyperedge.Builder builderForValue) {
         if (edgesBuilder_ == null) {
           ensureEdgesIsMutable();
           edges_.add(index, builderForValue.build());
@@ -1792,7 +2008,7 @@ public final class HypergraphProto {
         return this;
       }
       public Builder addAllEdges(
-          java.lang.Iterable<? extends hypergraph.HypergraphProto.Hyperedge> values) {
+          java.lang.Iterable<? extends HypergraphProto.Hyperedge> values) {
         if (edgesBuilder_ == null) {
           ensureEdgesIsMutable();
           super.addAll(values, edges_);
@@ -1822,18 +2038,18 @@ public final class HypergraphProto {
         }
         return this;
       }
-      public hypergraph.HypergraphProto.Hyperedge.Builder getEdgesBuilder(
+      public HypergraphProto.Hyperedge.Builder getEdgesBuilder(
           int index) {
         return getEdgesFieldBuilder().getBuilder(index);
       }
-      public hypergraph.HypergraphProto.HyperedgeOrBuilder getEdgesOrBuilder(
+      public HypergraphProto.HyperedgeOrBuilder getEdgesOrBuilder(
           int index) {
         if (edgesBuilder_ == null) {
           return edges_.get(index);  } else {
           return edgesBuilder_.getMessageOrBuilder(index);
         }
       }
-      public java.util.List<? extends hypergraph.HypergraphProto.HyperedgeOrBuilder> 
+      public java.util.List<? extends HypergraphProto.HyperedgeOrBuilder> 
            getEdgesOrBuilderList() {
         if (edgesBuilder_ != null) {
           return edgesBuilder_.getMessageOrBuilderList();
@@ -1841,25 +2057,25 @@ public final class HypergraphProto {
           return java.util.Collections.unmodifiableList(edges_);
         }
       }
-      public hypergraph.HypergraphProto.Hyperedge.Builder addEdgesBuilder() {
+      public HypergraphProto.Hyperedge.Builder addEdgesBuilder() {
         return getEdgesFieldBuilder().addBuilder(
-            hypergraph.HypergraphProto.Hyperedge.getDefaultInstance());
+            HypergraphProto.Hyperedge.getDefaultInstance());
       }
-      public hypergraph.HypergraphProto.Hyperedge.Builder addEdgesBuilder(
+      public HypergraphProto.Hyperedge.Builder addEdgesBuilder(
           int index) {
         return getEdgesFieldBuilder().addBuilder(
-            index, hypergraph.HypergraphProto.Hyperedge.getDefaultInstance());
+            index, HypergraphProto.Hyperedge.getDefaultInstance());
       }
-      public java.util.List<hypergraph.HypergraphProto.Hyperedge.Builder> 
+      public java.util.List<HypergraphProto.Hyperedge.Builder> 
            getEdgesBuilderList() {
         return getEdgesFieldBuilder().getBuilderList();
       }
       private com.google.protobuf.RepeatedFieldBuilder<
-          hypergraph.HypergraphProto.Hyperedge, hypergraph.HypergraphProto.Hyperedge.Builder, hypergraph.HypergraphProto.HyperedgeOrBuilder> 
+          HypergraphProto.Hyperedge, HypergraphProto.Hyperedge.Builder, HypergraphProto.HyperedgeOrBuilder> 
           getEdgesFieldBuilder() {
         if (edgesBuilder_ == null) {
           edgesBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
-              hypergraph.HypergraphProto.Hyperedge, hypergraph.HypergraphProto.Hyperedge.Builder, hypergraph.HypergraphProto.HyperedgeOrBuilder>(
+              HypergraphProto.Hyperedge, HypergraphProto.Hyperedge.Builder, HypergraphProto.HyperedgeOrBuilder>(
                   edges_,
                   ((bitField0_ & 0x00000002) == 0x00000002),
                   getParentForChildren(),
@@ -1869,7 +2085,7 @@ public final class HypergraphProto {
         return edgesBuilder_;
       }
       
-      // @@protoc_insertion_point(builder_scope:shortestPath.Hypergraph)
+      // @@protoc_insertion_point(builder_scope:Hypergraph)
     }
     
     static {
@@ -1877,7 +2093,7 @@ public final class HypergraphProto {
       defaultInstance.initFields();
     }
     
-    // @@protoc_insertion_point(class_scope:shortestPath.Hypergraph)
+    // @@protoc_insertion_point(class_scope:Hypergraph)
   }
   
   private static com.google.protobuf.Descriptors.Descriptor
@@ -1904,13 +2120,14 @@ public final class HypergraphProto {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\020hypergraph.proto\022\014shortestPath\"\"\n\006Vert" +
-      "ex\022\n\n\002id\030\001 \002(\005\022\014\n\004name\030\002 \002(\t\"N\n\tHyperedg" +
-      "e\022\n\n\002id\030\001 \002(\005\022\016\n\006weight\030\002 \002(\001\022\023\n\013childre" +
-      "nIds\030\003 \003(\005\022\020\n\010parentId\030\004 \001(\005\"\\\n\nHypergra" +
-      "ph\022&\n\010vertices\030\001 \003(\0132\024.shortestPath.Vert" +
-      "ex\022&\n\005edges\030\002 \003(\0132\027.shortestPath.Hypered" +
-      "geB\021B\017HypergraphProto"
+      "\n\020hypergraph.proto\022\014shortestPath\"C\n\006Vert" +
+      "ex\022\n\n\002id\030\001 \002(\005\022\014\n\004name\030\002 \002(\t\022\016\n\006inEdge\030\003" +
+      " \003(\005\022\017\n\007outEdge\030\004 \003(\005\"N\n\tHyperedge\022\n\n\002id" +
+      "\030\001 \002(\005\022\016\n\006weight\030\002 \002(\001\022\023\n\013childrenIds\030\003 " +
+      "\003(\005\022\020\n\010parentId\030\004 \001(\005\"\\\n\nHypergraph\022&\n\010v" +
+      "ertices\030\001 \003(\0132\024.Vertex\022&\n\005e" +
+      "dges\030\002 \003(\0132\027.HyperedgeB\021B\017H" +
+      "ypergraphProto"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -1922,25 +2139,25 @@ public final class HypergraphProto {
           internal_static_shortestPath_Vertex_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_shortestPath_Vertex_descriptor,
-              new java.lang.String[] { "Id", "Name", },
-              hypergraph.HypergraphProto.Vertex.class,
-              hypergraph.HypergraphProto.Vertex.Builder.class);
+              new java.lang.String[] { "Id", "Name", "InEdge", "OutEdge", },
+              HypergraphProto.Vertex.class,
+              HypergraphProto.Vertex.Builder.class);
           internal_static_shortestPath_Hyperedge_descriptor =
             getDescriptor().getMessageTypes().get(1);
           internal_static_shortestPath_Hyperedge_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_shortestPath_Hyperedge_descriptor,
               new java.lang.String[] { "Id", "Weight", "ChildrenIds", "ParentId", },
-              hypergraph.HypergraphProto.Hyperedge.class,
-              hypergraph.HypergraphProto.Hyperedge.Builder.class);
+              HypergraphProto.Hyperedge.class,
+              HypergraphProto.Hyperedge.Builder.class);
           internal_static_shortestPath_Hypergraph_descriptor =
             getDescriptor().getMessageTypes().get(2);
           internal_static_shortestPath_Hypergraph_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_shortestPath_Hypergraph_descriptor,
               new java.lang.String[] { "Vertices", "Edges", },
-              hypergraph.HypergraphProto.Hypergraph.class,
-              hypergraph.HypergraphProto.Hypergraph.Builder.class);
+              HypergraphProto.Hypergraph.class,
+              HypergraphProto.Hypergraph.Builder.class);
           return null;
         }
       };
