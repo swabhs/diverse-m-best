@@ -15,19 +15,19 @@ public class KBestSemiringSmartTest {
 	
 	public KBestSemiringSmartTest() {
 		List<Derivation> d1 = new ArrayList<Derivation>();
-		d1.add(new Derivation(null, 10.0));
-		d1.add(new Derivation(null, 9.0));
-		d1.add(new Derivation(null, 2.0));
+		d1.add(new Derivation(null, 10.0, null));
+		d1.add(new Derivation(null, 9.0, null));
+		d1.add(new Derivation(null, 2.0, null));
 		
 		List<Derivation> d2 = new ArrayList<Derivation>();
-		d2.add(new Derivation(null, 10.0));
-		d2.add(new Derivation(null, 8.0));
-		d2.add(new Derivation(null, 7.0));
+		d2.add(new Derivation(null, 10.0, null));
+		d2.add(new Derivation(null, 8.0, null));
+		d2.add(new Derivation(null, 7.0, null));
 		
 		List<Derivation> d3 = new ArrayList<Derivation>();
-		d3.add(new Derivation(null, 10.0));
-		d3.add(new Derivation(null, 6.0));
-		d3.add(new Derivation(null, 4.0));
+		d3.add(new Derivation(null, 10.0, null));
+		d3.add(new Derivation(null, 6.0, null));
+		d3.add(new Derivation(null, 4.0, null));
 		
 		derivationsSet = new ArrayList<List<Derivation>>();
 		derivationsSet.add(d1);
@@ -50,6 +50,22 @@ public class KBestSemiringSmartTest {
 			actual.add(actualD.get(i).getScore());
 		}
 		assertTrue(expected.equals(actual));
+	}
+	
+	@Test
+	public void testMultiply_WhenOnlyOneSubDerivation() {
+		List<Derivation> d4 = new ArrayList<Derivation>();
+		d4.add(new Derivation(null, 1.0, null));
+		List<List<Derivation>> dSet = new ArrayList<List<Derivation>>();
+		dSet.add(d4);
+		kbest = new KBestSemiringSmart(3);
+		List<Derivation> actualD = kbest.multiply(dSet);
+		
+		List<Double> actual = new ArrayList<Double>();
+		for (int i = 0; i < actualD.size(); i++) {
+			actual.add(actualD.get(i).getScore());
+		}
+		System.out.println(actual);
 	}
 
 	@Test

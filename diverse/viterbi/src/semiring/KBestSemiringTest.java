@@ -24,19 +24,19 @@ public class KBestSemiringTest {
 	public KBestSemiringTest() {
 		super();
 		d1 = new ArrayList<Derivation>();
-		d1.add(new Derivation(null, 0.6));
-		d1.add(new Derivation(null, 0.5));
-		d1.add(new Derivation(null, 0.1));
+		d1.add(new Derivation(null, 0.6, null));
+		d1.add(new Derivation(null, 0.5, null));
+		d1.add(new Derivation(null, 0.1, null));
 		
 		d2 = new ArrayList<Derivation>();
-		d2.add(new Derivation(null, 0.9));
-		d2.add(new Derivation(null, 0.4));
-		d2.add(new Derivation(null, 0.0));
+		d2.add(new Derivation(null, 0.9, null));
+		d2.add(new Derivation(null, 0.4, null));
+		d2.add(new Derivation(null, 0.0, null));
 		
 		d3 = new ArrayList<Derivation>();
-		d3.add(new Derivation(null, 0.7));
-		d3.add(new Derivation(null, 0.6));
-		d3.add(new Derivation(null, 0.1));
+		d3.add(new Derivation(null, 0.7, null));
+		d3.add(new Derivation(null, 0.6, null));
+		d3.add(new Derivation(null, 0.1, null));
 		
 		kbest = new KBestSemiring(3);
 	}
@@ -50,7 +50,6 @@ public class KBestSemiringTest {
 		for (Derivation d : actual) {
 			actualScores.add(d.getScore());
 		}
-		System.out.println(actualScores);
 		assertTrue(expectedScores.equals(actualScores));
 	}
 	
@@ -69,5 +68,4 @@ public class KBestSemiringTest {
 		}
 		assertTrue(expectedScores.equals(actualScores));
 	}
-
 }

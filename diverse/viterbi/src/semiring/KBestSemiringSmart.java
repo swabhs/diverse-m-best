@@ -7,7 +7,6 @@ import java.util.Map;
 
 import utility.MaxPriorityQ;
 import utility.PositionVector;
-import viterbi.ViterbiUtils;
 
 public class KBestSemiringSmart extends KBestSemiring {
 
@@ -24,11 +23,11 @@ public class KBestSemiringSmart extends KBestSemiring {
 	 */
 	public List<Derivation> multiply(List<List<Derivation>> derivationsSet) {
 		List<Derivation> kbest = new ArrayList<Derivation>();
-		
+		System.out.println(derivationsSet.size());
 		PositionVector pVector = new PositionVector(-1, derivationsSet.size());
-		kbest.add(ViterbiUtils.getCandidateDerivation(derivationsSet, pVector));
+		kbest.add(SemiringUtils.getCandidateDerivation(derivationsSet, pVector, null));
 		
-		Map<Derivation, PositionVector> argmax = new HashMap<Derivation, PositionVector>();
+		Map<Derivation, PositionVector> nextDerivations = new HashMap<Derivation, PositionVector>();
 		MaxPriorityQ q = new MaxPriorityQ();
 		
 		while (kbest.size() < k ) {
@@ -36,10 +35,10 @@ public class KBestSemiringSmart extends KBestSemiring {
 				PositionVector candidatePosition = 
 						pVector.add(new PositionVector(i, pVector.size()));
 				Derivation candidateDerivation = 
-						ViterbiUtils.getCandidateDerivation(derivationsSet, candidatePosition);
+						SemiringUtils.getCandidateDerivation(derivationsSet, candidatePosition, null);
 				
 				if (candidateDerivation != null && !q.contains(candidateDerivation)) {
-					argmax.put(candidateDerivation, candidatePosition);
+					nextDerivations.put(candidateDerivation, candidatePosition);
 					q.insert(candidateDerivation);
 				}				
 			}
@@ -49,9 +48,9 @@ public class KBestSemiringSmart extends KBestSemiring {
 			}
 			Derivation best = q.extractMax();
 			
-			for (Derivation d : argmax.keySet()) {
+			for (Derivation d : nextDerivations.keySet()) {
 				if (d.getScore().equals(best.getScore())) {
-					pVector = argmax.get(d);
+					pVector = nextDerivations.get(d);
 					break;
 				}
 			}

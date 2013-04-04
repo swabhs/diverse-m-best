@@ -11,7 +11,7 @@ public class OneBestSemiring implements Semiring<Derivation> {
 		for (Derivation d : derivations) {
 			product = product * d.getScore();
 		}
-		Derivation result = new Derivation(null, product);
+		Derivation result = new Derivation(null, product, derivations);
 		return result;
 	}
 	
