@@ -8,7 +8,6 @@ import semiring.Derivation;
 /**
  * Max priority queue for Derivation valued data points
  * @author swabha
- *
  */
 public class MaxPriorityQ {
 
@@ -23,14 +22,15 @@ public class MaxPriorityQ {
 	}
 	
 	public void insert(Derivation newElement) {
-		// because the score of a derivation needs to be between 0 and 1.
-		elements.add(new Derivation(null, -0.9)); 
+		// Insert a dummy derivation with score -0.9, which is not valid because
+		// the score of a derivation needs to be between 0 and 1.
+		elements.add(new Derivation(null, -0.9, null)); 
 		heapIncKey(elements, elements.size() - 1, newElement);
 	}
 	
 	public boolean contains(Derivation testD) {
 		for (Derivation d : elements) {
-			if (testD.getScore().equals(d.getScore())) {
+			if (testD.compareTo(d) == 0) {
 					return true;
 			}
 		}
@@ -50,12 +50,12 @@ public class MaxPriorityQ {
 	}
 	
 	private void heapIncKey(List<Derivation> elements, int i, Derivation value) {
-		if (value.getScore() < elements.get(i).getScore()) {
-			System.err.println(value.getScore() + " New value is less than current");
+		if (value.compareTo(elements.get(i)) < 0) {
+			System.err.println("New value in heap is less than current");
 			return;
 		} 
 		elements.set(i, value);
-		while (i > 0 && elements.get(i/2).getScore() < value.getScore()) {
+		while (i > 0 && elements.get(i/2).compareTo(value) < 0) {
 			Derivation temp = elements.get(i/2);
 			elements.set(i/2, elements.get(i));
 			elements.set(i, temp);
@@ -68,13 +68,13 @@ public class MaxPriorityQ {
 		int right = pos*2 + 2;
 		int largest;
 		if (left < elements.size() && 
-				elements.get(left).getScore() > elements.get(pos).getScore()) {
+				elements.get(left).compareTo(elements.get(pos)) > 0) {
 			largest = left;
 		} else {
 			largest = pos;
 		}
 		if (right < elements.size() && 
-				elements.get(right).getScore() > elements.get(largest).getScore()) {
+				elements.get(right).compareTo(elements.get(largest)) > 0) {
 			largest = right;
 		}
 		if (largest != pos) {

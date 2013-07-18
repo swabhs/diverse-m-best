@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import semiring.Derivation;
+import semiring.SemiringUtils;
 import utility.MaxPriorityQ;
 import utility.PositionVector;
 
@@ -23,9 +24,9 @@ public class Viterbi3 {
 	private int k;
 	
 	/** Saves a k sized list of derivations for each vertex */
-	private List<List<Derivation>> derivationsSet;
+	private Map<Integer, List<Derivation>> derivationsSet;
 	
-	Viterbi3(int k) {
+	public Viterbi3(int k) {
 		super();
 		this.k = k;
 	}
@@ -34,35 +35,31 @@ public class Viterbi3 {
 	 * Initializes the weight of terminal nodes to 1.0 and the rest of the nodes to 0.0
 	 * For every node, initializes the best possible hyperedge to reach it(backPointers) to null
 	 */
-	List<List<Derivation>> initialize(Hypergraph h) {
-		derivationsSet = new ArrayList<List<Derivation>>();
+	Map<Integer, List<Derivation>> initialize(Hypergraph h) {
+		derivationsSet = new HashMap<Integer, List<Derivation>>();
 		List<Integer> terminalIds = HypergraphUtils.getTerminals(h);
 		
-		for (int i = 0; i < terminalIds.size(); i++) {
-			Derivation d = new Derivation(null, 1.0);
+		for (Integer terminal : terminalIds) {
+			Derivation d = new Derivation(null, 1.0, null);
 			List<Derivation> dList = new ArrayList<Derivation>();
 			dList.add(d);
-			derivationsSet.add(dList);			
+			derivationsSet.put(terminal, dList);			
 		}
 		return derivationsSet;
 	}
 	
-	/**
+	/** TODO(swabha): Return only the root derivation, not the entire map
 	 * Run Viterbi to get a list of k best derivations for each vertex in hypergraph
 	 */
-	List<List<Derivation>> run(Hypergraph h) {
+	public Map<Integer, List<Derivation>> run(Hypergraph h) {
 		Map<Integer, List<Hyperedge>> inMap = HypergraphUtils.generateIncomingMap(h);
 		List<Integer> vertices = HypergraphUtils.toposort(h);
-		List<Integer> terminals = HypergraphUtils.getTerminals(h);
-		System.out.println(terminals);
-		System.out.println(vertices);
 		initialize(h);
 		
 		for (Integer v: vertices) {	
 			List<Hyperedge> edges = inMap.get(v);
-			System.out.println(v + ": " + edges.size());
-			if (!terminals.contains(v)) {
-				derivationsSet.add(v, findKBestForVertex(edges));
+			if (!derivationsSet.containsKey(v)) {
+				derivationsSet.put(v, findKBestForVertex(edges));
 			}
 		}
 		return derivationsSet;
@@ -73,63 +70,45 @@ public class Viterbi3 {
 		List<Derivation> kbest = new ArrayList<Derivation>();	
 		MaxPriorityQ q = new MaxPriorityQ();
 		
-		Map<Hyperedge, List<List<Derivation>>> derivationMap = 
-				new HashMap<Hyperedge, List<List<Derivation>>>();
-		Map<Hyperedge, PositionVector> positionMap = 
-				new HashMap<Hyperedge, PositionVector>();
-		Map<Hyperedge, Map<Derivation, PositionVector>> fullMap = 
-				new HashMap<Hyperedge, Map<Derivation, PositionVector>>();
+		/** Map an edge with the list of its child derivations */
+		Map<Integer, List<List<Derivation>>> derivationMap = 
+				new HashMap<Integer, List<List<Derivation>>>();
+		/** Maps an edge with the next best subderivation candidates */
+		Map<Derivation, PositionVector> positionMap = 
+				new HashMap<Derivation, PositionVector>();
 		
-		// Fill in data structures
+		
+		// Fill in data structures and insert top derivations from each incoming hyperedge
 		for (Hyperedge e: edges) {
 			// Set derivationMap
 			List<List<Derivation>> derivationsUnderEdge = new ArrayList<List<Derivation>>();
 			for (Integer u : e.getChildrenIdsList()) {
 				derivationsUnderEdge.add(derivationsSet.get(u));
 			}
+			derivationMap.put(e.getId(), derivationsUnderEdge);
 			
 			// Set positionMap
 			PositionVector pVector = new PositionVector(-1, e.getChildrenIdsCount());
-			positionMap.put(e, pVector);
-			
-			// Set fullMap
 			Derivation candidate = 
-					ViterbiUtils.getCandidateDerivation(derivationsUnderEdge, pVector);
-			Map<Derivation, PositionVector> posOfDerivation = 
-					new HashMap<Derivation, PositionVector>();
-			posOfDerivation.put(candidate, pVector);
-			fullMap.put(e, posOfDerivation);
+					SemiringUtils.getCandidateDerivation(derivationsUnderEdge, pVector, e);
+			positionMap.put(candidate, pVector);
 			
 			q.insert(candidate);
 		}
 		
 		while (kbest.size() < (k - 1) && q.size() > 0) {
+			// Extract the 1st best candidate
 			Derivation best = q.extractMax();
-			kbest.add(best);			
+			kbest.add(best);
 			
-			// Find out which derivation from which hyperedge was the best and 
-			// get new candidates from that hyperedge
-			for (Hyperedge e: edges) {
-				boolean bestDerivationInEdge = false;
-				Map<Derivation, PositionVector> posOfDerivation = fullMap.get(e);
-				for (Derivation d : posOfDerivation.keySet()) {
-					if (best.getScore().equals(d.getScore())) {
-						positionMap.put(e, posOfDerivation.get(d));
-						posOfDerivation.remove(d);
-						queueNextBestCandidates(
-								derivationMap.get(e), positionMap.get(e), posOfDerivation, q, e);
-						bestDerivationInEdge = true;
-						break;
-					}
-				}
-				if (bestDerivationInEdge) {
-					fullMap.put(e, posOfDerivation);
-					break;
-				}
-			}
-			
+			Hyperedge bestEdge = best.getE();
+			queueNextBestCandidates(
+					derivationMap.get(bestEdge.getId()), 
+					positionMap.get(best), 
+					positionMap, q, bestEdge);
 		}
 		
+		// Insert k-th best candidate
 		if (q.size() > 0) {
 			kbest.add(q.extractMax());
 		}
@@ -149,15 +128,15 @@ public class Viterbi3 {
 			Map<Derivation, PositionVector> posOfDerivation,
 			MaxPriorityQ q, 
 			Hyperedge e) {
+		
 		for (int i = 0; i < counters.size(); i++) {
 			PositionVector candidatePosition = 
 					counters.add(new PositionVector(i, counters.size()));
 			Derivation candidateDerivation = 
-					ViterbiUtils.getCandidateDerivation(derivationsSet, candidatePosition);
-			candidateDerivation.setE(e);
-			candidateDerivation.setScore(candidateDerivation.getScore() * e.getWeight());
+					SemiringUtils.getCandidateDerivation(fullSet, candidatePosition, e);
 			
 			if (candidateDerivation != null && !q.contains(candidateDerivation)) {
+				
 				posOfDerivation.put(candidateDerivation, candidatePosition);
 				q.insert(candidateDerivation);
 			}				

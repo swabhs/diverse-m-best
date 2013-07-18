@@ -12,11 +12,11 @@ public class MaxPriorityQTest {
 	
 	public MaxPriorityQTest() {
 		q = new MaxPriorityQ();
-		q.insert(new Derivation(null, 3.0));
-		q.insert(new Derivation(null, 5.9));
-		q.insert(new Derivation(null, 4.1));
-		q.insert(new Derivation(null, 0.4));
-		q.insert(new Derivation(null, 7.8));
+		q.insert(new Derivation(null, 3.0, null));
+		q.insert(new Derivation(null, 5.9, null));
+		q.insert(new Derivation(null, 4.1, null));
+		q.insert(new Derivation(null, 0.4, null));
+		q.insert(new Derivation(null, 7.8, null));
 	}
 
 	@Test
@@ -32,8 +32,8 @@ public class MaxPriorityQTest {
 	@Test
 	public void testcontains() {
 		q = new MaxPriorityQ();
-		q.insert(new Derivation(null, 3.0));
-		assertTrue(q.contains(new Derivation(null, 3.0)));
+		q.insert(new Derivation(null, 3.0, null));
+		assertTrue(q.contains(new Derivation(null, 3.0, null)));
 	}
 
 }

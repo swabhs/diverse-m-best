@@ -7,9 +7,9 @@ public class OneBestSemiring implements Semiring<Derivation> {
 	/** */
 	@Override
 	public Derivation multiply(List<Derivation> derivations) {
-		double product = 1.0;
+		double product = 0.0;
 		for (Derivation d : derivations) {
-			product = product * d.getScore();
+			product = product + d.getScore();
 		}
 		Derivation result = new Derivation(null, product, derivations);
 		return result;

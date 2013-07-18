@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 public class HypergraphUtils {
 	
@@ -18,6 +19,15 @@ public class HypergraphUtils {
 	 */
 	static Map<Integer, List<Hyperedge>> generateOutgoingMap(Hypergraph h) {		
 		Map<Integer, List<Hyperedge>> outMap = new HashMap<Integer, List<Hyperedge>>();
+		Map<Integer, Hyperedge> eMap = getEdgesMap(h);
+		for (Vertex v : h.getVerticesList()) {
+			List<Hyperedge> outgoing = new ArrayList<Hyperedge>();
+			for (Integer e : v.getOutEdgeList()) {
+				outgoing.add(eMap.get(e));
+			}
+			outMap.put(v.getId(), outgoing);
+		}
+		/* Old Implementation
 		for (Vertex v : h.getVerticesList()) {
 			outMap.put(v.getId(), new ArrayList<Hyperedge>());
 		}
@@ -28,7 +38,7 @@ public class HypergraphUtils {
 				outgoing.add(e);
 				outMap.put(childId, outgoing);
 			}			
-		}
+		}*/
 		return outMap;
 	}
 	
@@ -39,10 +49,7 @@ public class HypergraphUtils {
 	public static Map<Integer, List<Hyperedge>> generateIncomingMap(Hypergraph h) {
 		Map<Integer, List<Hyperedge>> inMap = new HashMap<Integer, List<Hyperedge>>();
 				
-		Map<Integer, Hyperedge> edgesMap = new HashMap<Integer, Hyperedge>();
-		for (Hyperedge e: h.getEdgesList()) {
-			edgesMap.put(e.getId(), e);
-		}
+		Map<Integer, Hyperedge> edgesMap = getEdgesMap(h);
 		
 		for (Vertex v : h.getVerticesList()) {
 			List<Hyperedge> inedges = new ArrayList<Hyperedge>();
@@ -90,40 +97,39 @@ public class HypergraphUtils {
 	 */
 	public static List<Integer> toposort(Hypergraph h) {
 		List<Integer> sorted = new ArrayList<Integer>();
-		List<Integer> terminals = getTerminals(h);
-		Map<Integer, Boolean> visited = new HashMap<Integer, Boolean>();
-		Map<Integer, List<Hyperedge>> outMap = generateOutgoingMap(h);
-		for(Vertex v : h.getVerticesList()) {
-			visited.put(v.getId(), false);
-		}
 		
-		for (Integer v : terminals) {
-			visit(v, sorted, visited, outMap);
+		List<Integer> terminals = getTerminals(h);
+		Collections.reverse(terminals);
+		Stack<Integer> toVisit = new Stack<Integer>();
+		toVisit.addAll(terminals);
+		
+		List<Integer> seenEdges = new ArrayList<Integer>(h.getEdgesCount());
+		Map<Integer, List<Hyperedge>> outMap = generateOutgoingMap(h);
+		Map<Integer, List<Hyperedge>> inMap = generateIncomingMap(h);
+		
+		while (toVisit.empty() == false) {
+			int vert = toVisit.pop();
+			sorted.add(vert);
+			for (Hyperedge outEdge : outMap.get(vert)) {
+				if (sorted.containsAll(outEdge.getChildrenIdsList())) {
+					seenEdges.add(outEdge.getId());
+				}
+				int nextTarget = outEdge.getParentId();
+				boolean validNextTarget = true;
+				for (Hyperedge inEdge : inMap.get(nextTarget)) {
+					if (seenEdges.contains(inEdge.getId()) == false) {
+						validNextTarget = false;
+						break;
+					}
+				}
+				if (validNextTarget) {
+					toVisit.push(nextTarget);
+				}
+			}
 		}
 		return sorted;
 	}
 	
-	/** Hypergraph topological sort recursion. Runs in O(|V|+|E|). */
-	static private void visit(Integer n, List<Integer> sorted,	Map<Integer, Boolean> visited, 
-			Map<Integer, List<Hyperedge>> outMap) {
-		if (!visited.get(n)) {
-			visited.put(n, true);
-			sorted.add(n);
-			// get children of hyperedge that has vertexId as parent
-			for (Hyperedge e : outMap.get(n)) {
-				boolean shouldVisitParent = true;
-				for (Integer m : e.getChildrenIdsList()) {
-					if (!visited.get(m)){
-						shouldVisitParent = false;
-						break;
-					}
-				}
-				if (shouldVisitParent) {
-					visit(e.getParentId(), sorted, visited, outMap);
-				}
-			}
-		}
-	}
 	
 	/** Displays the 1-best parse */
 	public static String renderResult(List<Hyperedge> edges, Hypergraph h) {
@@ -159,11 +165,21 @@ public class HypergraphUtils {
 		}
 	}
 	
+	/** Gets a map between the vertex Id and the vertex */
 	public static Map<Integer, Vertex> getVerticesMap(Hypergraph h) {
 		Map<Integer, Vertex> vMap = new HashMap<Integer, Vertex>();
 		for (Vertex vertex : h.getVerticesList()) {
 			vMap.put(vertex.getId(), vertex);
 		}
 		return vMap;
+	}
+	
+	/** Gets a map between the edge Id and the edge */
+	public static Map<Integer, Hyperedge> getEdgesMap(Hypergraph h) {
+		Map<Integer, Hyperedge> eMap = new HashMap<Integer, Hyperedge>();
+		for (Hyperedge edge : h.getEdgesList()) {
+			eMap.put(edge.getId(), edge);
+		}
+		return eMap;
 	}
 }

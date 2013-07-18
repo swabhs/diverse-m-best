@@ -19,14 +19,16 @@ public class SemiringUtils {
 			if (dSet.get(i).size() <= pv.get(i)) {
 				return null;
 			}
-			prod *= dSet.get(i).get(pv.get(i)).getScore();
+			//prod *= dSet.get(i).get(pv.get(i)).getScore();
+			prod = Math.exp(Math.log(prod) + Math.log(dSet.get(i).get(pv.get(i)).getScore()));
 			subDerivations.add(dSet.get(i).get(pv.get(i)));
 		}
 		
 		Derivation d = new Derivation(null, prod, subDerivations);
 		if (e!=null) {
 			d.setE(e);
-			d.setScore(d.getScore() * e.getWeight());
+			//d.setScore(d.getScore() * e.getWeight());
+			d.setScore(Math.exp(Math.log(d.getScore()) + Math.log(e.getWeight())));
 		}
 		return d;
 	}

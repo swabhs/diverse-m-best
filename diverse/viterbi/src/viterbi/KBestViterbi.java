@@ -5,6 +5,7 @@ import hypergraph.HypergraphProto.Hyperedge;
 import hypergraph.HypergraphProto.Hypergraph;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,29 +19,36 @@ import semiring.Semiring;
  */
 public class KBestViterbi {
 	
-	/** Dynamic programming state saving variables */
-	List<List<Derivation>> derivationsSet;
+	/** Dynamic programming state saving variables, one list for each vertex */
+	private Map<Integer, List<Derivation>> derivationsSet;
+	
+	private Semiring<List<Derivation>> semiring;
+	
+	public KBestViterbi(Semiring<List<Derivation>> semiring) {
+		this.semiring = semiring;
+	}
 	
 	/** 
-	 * Initializes the weight of terminal nodes to 1.0 and the rest of the nodes to 0.0
-	 * For every node, initializes the best possible hyperedge to reach it(backPointers) to null
+	 * Initializes the weight of terminals to 1.0.
+	 * Also initializes the best possible hyperedge to reach the terminal(the backpointer) to null
 	 */
-	public List<List<Derivation>> initialize(Hypergraph h) {
-		derivationsSet = new ArrayList<List<Derivation>>();
+	public Map<Integer, List<Derivation>> initialize(Hypergraph h) {
+		derivationsSet = new HashMap<Integer, List<Derivation>>();
 		List<Integer> terminalIds = HypergraphUtils.getTerminals(h);
 		
-		for (int i = 0; i < terminalIds.size(); i++) {
+		for (Integer terminal : terminalIds) {
 			List<Derivation> dList = new ArrayList<Derivation>();
-			dList.add(new Derivation(null, 1.0));
-			derivationsSet.add(dList);
+			dList.add(new Derivation(null, 1.0, null));
+			derivationsSet.put(terminal, dList);
 		}
 		return derivationsSet;
 	}
 	
 	/**
-	 * Run Viterbi on a KBestSemiring and get a list of at most K derivation lists, the 1 best for each vertex
+	 * Run Viterbi on a KBestSemiring and get a list of at most K derivation lists,
+	 * the 1 best for each vertex
 	 */
-	public List<List<Derivation>> run(Hypergraph h, Semiring<List<Derivation>> semiring) {
+	public Map<Integer, List<Derivation>> run(Hypergraph h) {
 		Map<Integer, List<Hyperedge>> inMap = HypergraphUtils.generateIncomingMap(h);
 		List<Integer> vertices = HypergraphUtils.toposort(h);
 		initialize(h);
@@ -48,7 +56,7 @@ public class KBestViterbi {
 		for (Integer v: vertices) {	
 			List<Hyperedge> incomingEdges = inMap.get(v);
 			List<Derivation> dList = null;
-			if (v >= derivationsSet.size()) {
+			if (!derivationsSet.containsKey(v)) {
 				dList = new ArrayList<Derivation>();
 			} else {
 				dList = derivationsSet.get(v);
@@ -59,6 +67,7 @@ public class KBestViterbi {
 				for (Integer child : e.getChildrenIdsList()) {
 					subDerivations.add(derivationsSet.get(child));
 				}
+				
 				List<Derivation> product = semiring.multiply(subDerivations);
 				for (Derivation d : product) {
 					d.setE(e);
@@ -66,7 +75,7 @@ public class KBestViterbi {
 				}
 				dList = semiring.add(dList, product);				
 			}
-			derivationsSet.add(dList);
+			derivationsSet.put(v, dList);
 		}
 		return derivationsSet;
 	}

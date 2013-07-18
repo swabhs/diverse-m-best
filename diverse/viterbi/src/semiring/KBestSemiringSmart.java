@@ -57,28 +57,6 @@ public class KBestSemiringSmart extends KBestSemiring {
 			kbest.add(best);
 		}
 		
-		/* Old Implementation
-		 * for (List<Derivation> derivations : derivationsSet) {
-			Derivation topD = derivations.get(0);
-			q.insert(topD);
-		}
-		
-		while (kbest.size() < k) {
-			Derivation max = q.extractMax();
-			kbest.add(max);
-			
-			for (List<Derivation> derivations : derivationsSet) {
-				
-				if (derivations.size() > 0 && max.equals(derivations.get(0))) {
-					
-					derivations.remove(0);
-					if (derivations.size() != 0) {
-						q.insert(derivations.get(0));
-					}
-					break;
-				}
-			}
-		}*/
 		return kbest;
 	}
 

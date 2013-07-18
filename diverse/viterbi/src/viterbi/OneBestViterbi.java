@@ -6,6 +6,7 @@ import hypergraph.HypergraphProto.Hypergraph;
 import hypergraph.HypergraphProto.Vertex;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,12 +16,9 @@ import semiring.Semiring;
 
 public class OneBestViterbi {
 
-	/** Derivation(v) = <edge, score> */
-	List<Derivation> derivations;
-	
 	Semiring<Derivation> semiring;
 	
-	OneBestViterbi() {
+	public OneBestViterbi() {
 		this.semiring = new OneBestSemiring();
 	}
 
@@ -28,53 +26,54 @@ public class OneBestViterbi {
 	 * Initializes the weight of terminal nodes to 1.0 and the rest of the nodes to 0.0
 	 * For every node, initializes the best possible hyperedge to reach it(backPointers) to null
 	 */
-	public List<Derivation> initialize(Hypergraph h) {
-		derivations = new ArrayList<Derivation>();
+	Map<Integer, Derivation> initialize(Hypergraph h) {
+		Map<Integer, Derivation> derivationMap = new HashMap<Integer, Derivation>();
 		List<Integer> terminalIds = HypergraphUtils.getTerminals(h);
 		
 		for (Vertex v : h.getVerticesList()) {
 			Derivation d = null;
 			if (terminalIds.contains(v.getId())) {
-				// Exact definition for terminal vertices - no edge associated, so null
-				d = new Derivation(null, 1.0);
+				// Exact definition for terminal vertices - no incoming edge, so null
+				d = new Derivation(null, 1.0, null);
 			} else {
 				// For each non terminal vertex, this needs to be set to the 1 best edge to reach it
-				d = new Derivation(null, 0.0);
+				d = new Derivation(null, 0.0, null);
 			}			
-			derivations.add(v.getId(), d);
+			derivationMap.put(v.getId(), d);
 		}
-		
-		return derivations;
+		return derivationMap;
 	}
 	
 	/**
 	 * Run Viterbi on a OneBestSemiring and get a list of derivations, the 1 best for each vertex
 	 */
-	public List<Derivation> run(Hypergraph h) { 
+	public Derivation run(Hypergraph h) { 
 		Map<Integer, List<Hyperedge>> inMap = HypergraphUtils.generateIncomingMap(h);
-		List<Integer> vertices = HypergraphUtils.toposort(h);
-		initialize(h);
+		List<Integer> topoSortedVertices = HypergraphUtils.toposort(h);
 		
-		for (Integer v: vertices) {	
+		Map<Integer, Derivation> derivationMap = initialize(h);
+		
+		for (Integer v: topoSortedVertices) {	
 			List<Hyperedge> incomingEdges = inMap.get(v);
-			Derivation dv = derivations.get(v);
+			Derivation dv = derivationMap.get(v);
 			
 			for (Hyperedge e : incomingEdges) {
-				// Construct a list of all sub derivations of a derivation
-				List<Derivation> subDerivations = new ArrayList<Derivation>();
+				// Construct a list of all derivations from the children of an edge
+				List<Derivation> childDerList = new ArrayList<Derivation>();
 				for (Integer child : e.getChildrenIdsList()) {
-					subDerivations.add(derivations.get(child));
+					childDerList.add(derivationMap.get(child));
 				}
 				
-				Derivation product = semiring.multiply(subDerivations);
+				Derivation product = semiring.multiply(childDerList);
 				product.setE(e);
 				product.setScore(e.getWeight() * product.getScore());
 				
 				dv = semiring.add(dv, product);							
 			}
-			derivations.set(v, dv);
+			derivationMap.put(v, dv);
 		}
-		return derivations;
+		int rootVertex = h.getVerticesCount() - 1;
+		return derivationMap.get(rootVertex);
 	}
 	
 }
